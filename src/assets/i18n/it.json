@@ -1,0 +1,17 @@
+{
+  "i18n": {
+    "term": {
+      "select_list": "Seleziona lista",
+      "tasks": "Task",
+      "new": "Nuovo",
+      "edit": "Modifica",
+      "preferences": "Preferenze",
+      "language": "Lingua",
+      "select_lang": "Seleziona lingua"
+    },
+    "lang": {
+      "english": "Inglese",
+      "italian": "Italiano"
+    }
+  }
+}

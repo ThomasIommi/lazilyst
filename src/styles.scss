@@ -1,1 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+p-button {
+  margin: 0 0.25rem;
+  &:first-child {
+    margin: 0 0.25rem 0 0;
+  }
+  &:last-child {
+    margin: 0 0 0 0.25rem;
+  }
+}

@@ -1,0 +1,10 @@
+.task-selector {
+  ::ng-deep div {
+    .ui-dropdown-label-container {
+      max-width: 10.5rem;
+      label {
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}

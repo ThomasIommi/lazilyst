@@ -1,0 +1,9 @@
+<p-button [title]="'i18n.term.options' | translate"
+          icon="pi pi-ellipsis-v"
+          styleClass="ui-button-rounded ui-button-secondary"
+          (click)="menu.toggle($event)"
+></p-button>
+<p-menu #menu
+        [popup]="true"
+        [model]="menuItems"
+></p-menu>
