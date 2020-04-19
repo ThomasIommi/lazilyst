@@ -79,7 +79,6 @@ export class GlobalMenuComponent implements OnInit, OnDestroy {
     dialogRef.onClose.pipe(take(1))
       .toPromise()
       .then((selectedLang: string) => {
-        this.translateService.use(selectedLang);
         this.store.dispatch(new SelectLang(selectedLang));
       });
   }
