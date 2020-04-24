@@ -1,16 +1,17 @@
 export class Task {
 
-  /** List name */
-  private _name: string;
+  /** Task name */
+  name: string;
+
+  /** Task Description */
+  description: string;
+
+  /** Task external link */
+  link: string;
 
   /** Basic costructor */
   constructor(name: string) {
-    this._name = name;
-  }
-
-  /** Name getter */
-  get name(): string {
-    return this._name;
+    this.name = name;
   }
 
 }

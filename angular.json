@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "gtasks": {
+    "lazilysts": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,11 +17,12 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/gtasks",
+            "outputPath": "dist/lazilysts",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
+            "preserveSymlinks": true,
             "aot": true,
             "assets": [
               "src/favicon.ico",
@@ -70,18 +71,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "gtasks:build"
+            "browserTarget": "lazilysts:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "gtasks:build:production"
+              "browserTarget": "lazilysts:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "gtasks:build"
+            "browserTarget": "lazilysts:build"
           }
         },
         "test": {
@@ -118,15 +119,15 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "gtasks:serve"
+            "devServerTarget": "lazilysts:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "gtasks:serve:production"
+              "devServerTarget": "lazilysts:serve:production"
             }
           }
         }
       }
     }},
-  "defaultProject": "gtasks"
+  "defaultProject": "lazilysts"
 }

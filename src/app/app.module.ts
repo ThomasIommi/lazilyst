@@ -10,6 +10,7 @@ import { MenuModule } from 'primeng/menu';
 import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { FieldsetModule } from 'primeng/fieldset';
 import { NgxsModule } from '@ngxs/store';
+import { NgxsIonicStorageModule } from '@iommi/ngxs-ionic-storage';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,10 +18,11 @@ import { TaskSelectorComponent } from './main/task/task-selector/task-selector.c
 import { GlobalMenuComponent } from './main/global-menu/global-menu.component';
 import { DialogComponentsModule } from './shared/modules/dialog-components/dialog-components.module';
 import { TaskInfosComponent } from './main/task/task-infos/task-infos.component';
-import { AppState } from './state/app.state';
 import { environment } from '../environments/environment';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { applicationStates } from './state/store-index';
+import { AppState } from './state/app.state';
+import { FormsModule } from '@angular/forms';
 
 /** NgxTranslate basic http loader */
 export function HttpLoaderFactory(http: HttpClient) {
@@ -45,11 +47,16 @@ export function HttpLoaderFactory(http: HttpClient) {
     FieldsetModule,
     HttpClientModule,
     MenuModule,
+    NgxsIonicStorageModule.forRoot({
+      storeName: 'AppState',
+      name: 'lazilystAppStorage',
+      version: 1.0
+    }),
     NgxsModule.forRoot(applicationStates, {
       developmentMode: !environment.production
     }),
     NgxsReduxDevtoolsPluginModule.forRoot({
-      name: 'GTaskAppState',
+      name: 'lazilystAppState',
       disabled: environment.production
     }),
     TranslateModule.forRoot({
@@ -59,7 +66,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       },
       defaultLanguage: 'en'
-    })
+    }),
+    FormsModule
   ],
   providers: [DialogService],
   bootstrap: [AppComponent]

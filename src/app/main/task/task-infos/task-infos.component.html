@@ -1,1 +1,18 @@
-<p>task-infos works!</p>
+<div *ngIf="(currentTask$ | async) != null; else welcome">
+  <p-fieldset *ngIf="(currentTask$ | async).description != null" [toggleable]="true">
+    <p-header>
+      {{ 'i18n.term.infos' | translate }}
+    </p-header>
+    <div *ngIf="(currentTask$ | async).description != null" class="task-property description">
+      <b>{{ 'i18n.term.description' | translate }}</b>: {{ (currentTask$ | async).description }}
+    </div>
+    <div *ngIf="(currentTask$ | async).link != null" class="task-property link">
+      <b>{{ 'i18n.term.external_link' | translate }}</b>:
+      <a [href]="(currentTask$ | async).link">{{ (currentTask$ | async).link }}</a>
+    </div>
+  </p-fieldset>
+</div>
+<ng-template #welcome>
+  <!-- TODO Welcome message + instructions -->
+  TODO WELCOME & INSTRUCTIONS
+</ng-template>

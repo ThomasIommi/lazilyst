@@ -1,7 +1,8 @@
 export enum MenuItemLabel {
+  DELETE = 'i18n.term.delete',
+  EDIT = 'i18n.term.edit',
+  LANGUAGE = 'i18n.term.language',
   LISTS = 'i18n.term.tasks',
   NEW = 'i18n.term.new',
-  EDIT = 'i18n.term.edit',
-  PREFERENCES = 'i18n.term.preferences',
-  LANGUAGE = 'i18n.term.language'
+  PREFERENCES = 'i18n.term.preferences'
 }

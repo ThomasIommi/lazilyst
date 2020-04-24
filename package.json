@@ -1,5 +1,5 @@
 {
-  "name": "gtasks",
+  "name": "lazilysts",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -24,6 +24,9 @@
     "@ngx-translate/core": "^12.1.2",
     "@ngx-translate/http-loader": "^4.0.0",
     "@ngxs/store": "^3.6.2",
+    "@ionic/storage": "^2.2.0",
+    "@ngxs-labs/async-storage-plugin": "^0.1.1",
+    "@iommi/ngxs-ionic-storage": "^0.0.2",
     "flag-icon-css": "^3.4.6",
     "immer": "^6.0.3",
     "primeicons": "^2.0.0",

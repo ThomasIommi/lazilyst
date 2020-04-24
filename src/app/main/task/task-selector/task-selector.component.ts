@@ -1,26 +1,69 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Dropdown } from 'primeng/dropdown';
+import { Select, Store } from '@ngxs/store';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { Task } from '../../../shared/models/task';
+import { SelectTask } from '../../../state/tasks/tasks.actions';
+import { TasksState } from '../../../state/tasks/tasks.state';
 
 @Component({
   selector: 'app-task-selector',
   templateUrl: './task-selector.component.html',
   styleUrls: ['./task-selector.component.scss']
 })
-export class TaskSelectorComponent implements OnInit {
-  /** Currently selected Task */
-  currentSelectedTask: Task;
-  /** Selectable Tasks */
-  tasks: Task[] = [];
+export class TaskSelectorComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  constructor() { }
+  /** Current task observable from NGXS app state */
+  @Select(TasksState.currentTask) currentTask$: Observable<Task>;
 
-  /** TaskSelectorComponent initialization */
+  /** Selectable tasks observable from NGXS app state */
+  @Select(TasksState.allTasks) allTasks$: Observable<Task[]>;
+
+  @ViewChild('dropdown') dropdown: Dropdown;
+
+  /** Destroy subscription signal */
+  private onDestroySubject: Subject<boolean> = new Subject<boolean>();
+
+  /**
+   * Constructor injection
+   * @param store NGXS app store
+   * @param changeDetectorRef Reference to the Angular change detector
+   */
+  constructor(private store: Store,
+              private changeDetectorRef: ChangeDetectorRef) {
+  }
+
+  /** Component main initialization */
   ngOnInit(): void {
-    // TODO load lists and get last used
-    this.currentSelectedTask = new Task('test');
-    for (let i = 0; i < 50; i++) {
-      this.tasks.push(new Task('Task ' + (i + 1)));
-    }
-    this.tasks.push(new Task('Very very very very long description task'));
+  }
+
+  /** Initialization after the view is ready */
+  ngAfterViewInit(): void {
+    this.initCurrentTaskUpdater();
+    this.changeDetectorRef.detectChanges();
+  }
+
+  /** Cleanup before component destruction */
+  ngOnDestroy(): void {
+    this.onDestroySubject.next(true);
+    this.onDestroySubject.unsubscribe();
+  }
+
+  /**
+   * Select the current task
+   * @param selectedTask Selected task
+   */
+  selectTask(selectedTask: Task): void {
+    this.store.dispatch(new SelectTask(selectedTask));
+  }
+
+  /** Automatically select the real current task on app state changes */
+  // FIXME try with ngModel
+  private initCurrentTaskUpdater(): void {
+    this.currentTask$.pipe(takeUntil(this.onDestroySubject)).subscribe((newCurrentTask: Task) => {
+      this.dropdown.writeValue(newCurrentTask);
+    });
   }
 }

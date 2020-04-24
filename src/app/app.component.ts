@@ -11,10 +11,10 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  // TODO load app preferences from IndexedDB into store
 
-  /** App language observable */
+  /** App language observable from NGXS app state */
   @Select(PreferencesState.lang) lang$: Observable<string>;
+
   /** Destroy subscription signal */
   private onDestroySubject: Subject<boolean> = new Subject<boolean>();
 
@@ -25,12 +25,12 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(private translateService: TranslateService) {
   }
 
-  /** Initialization */
+  /** Component main initialization */
   ngOnInit(): void {
     this.initLangChangeEventHandler();
   }
 
-  /** Clenup */
+  /** Cleanup before component destruction */
   ngOnDestroy(): void {
     this.onDestroySubject.next(true);
     this.onDestroySubject.unsubscribe();
@@ -40,7 +40,6 @@ export class AppComponent implements OnInit, OnDestroy {
   private initLangChangeEventHandler(): void {
     this.lang$.pipe(takeUntil(this.onDestroySubject))
       .subscribe((lang: string) => {
-        console.log(lang);
         this.translateService.use(lang);
       });
   }

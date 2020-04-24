@@ -17,28 +17,35 @@ import { SelectLang } from '../../state/preferences/preferences.actions';
 })
 export class GlobalMenuComponent implements OnInit, OnDestroy {
 
-  /** MenuItems available */
+  /** Available menu items */
   menuItems: MenuItem[];
+
   /** Destroy subscription signal */
   private onDestroySubject: Subject<boolean> = new Subject<boolean>();
 
+  /**
+   * Constructor injection
+   * @param translateService Service for handling translations by ngx-translate
+   * @param dialogService Service for opening NGPrime dialogs
+   * @param store NGXS app store
+   */
   constructor(private translateService: TranslateService,
               private dialogService: DialogService,
               private store: Store) {
   }
 
-  /** Initialization */
+  /** Component main initialization */
   ngOnInit(): void {
     this.initMenu();
   }
 
-  /** Cleanup */
+  /** Cleanup before component destruction */
   ngOnDestroy(): void {
     this.onDestroySubject.next(true);
     this.onDestroySubject.unsubscribe();
   }
 
-  /** Initialize menu with labels changing accordingly to lang changes */
+  /** Initialize menu with i18n translated labels */
   private initMenu(): void {
     this.translateService.stream(Object.values(MenuItemLabel))
       .pipe(takeUntil(this.onDestroySubject))
@@ -48,12 +55,16 @@ export class GlobalMenuComponent implements OnInit, OnDestroy {
             label: translationMap[MenuItemLabel.LISTS],
             items: [
               {
-                label: translationMap[MenuItemLabel.NEW],
+                label: translationMap[MenuItemLabel.NEW], // TODO new task
                 icon: 'pi pi-fw pi-plus'
               },
               {
-                label: translationMap[MenuItemLabel.EDIT],
+                label: translationMap[MenuItemLabel.EDIT], // TODO edit task
                 icon: 'pi pi-fw pi-pencil'
+              },
+              {
+                label: translationMap[MenuItemLabel.DELETE], // TODO delete task
+                icon: 'pi pi-fw pi-trash'
               }
             ]
           },
@@ -71,15 +82,12 @@ export class GlobalMenuComponent implements OnInit, OnDestroy {
       });
   }
 
-  /** Open the modal to select the user language */
-  private openSelectLanguageModal(): void {
+  /** Open a modal to select the user language preference */
+  private async openSelectLanguageModal(): Promise<void> {
     const dialogRef = this.dialogService.open(LangSelectionComponent, {
       header: this.translateService.instant('i18n.term.select_lang')
     });
-    dialogRef.onClose.pipe(take(1))
-      .toPromise()
-      .then((selectedLang: string) => {
-        this.store.dispatch(new SelectLang(selectedLang));
-      });
+    const selectedLang = await dialogRef.onClose.pipe(take(1)).toPromise();
+    this.store.dispatch(new SelectLang(selectedLang));
   }
 }

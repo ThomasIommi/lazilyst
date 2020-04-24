@@ -1,13 +1,19 @@
 {
   "i18n": {
     "term": {
-      "select_list": "Seleziona lista",
-      "tasks": "Task",
-      "new": "Nuovo",
+      "collapse": "Collassa",
+      "delete": "Elimina",
+      "description": "Descrizione",
       "edit": "Modifica",
-      "preferences": "Preferenze",
+      "expand": "Espandi",
+      "external_link": "Collegamento esterno",
+      "infos": "Informazioni",
       "language": "Lingua",
-      "select_lang": "Seleziona lingua"
+      "new": "Nuovo",
+      "preferences": "Preferenze",
+      "select_lang": "Seleziona lingua",
+      "select_list": "Seleziona lista",
+      "tasks": "Task"
     },
     "lang": {
       "english": "Inglese",

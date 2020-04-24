@@ -1,13 +1,19 @@
 {
   "i18n": {
     "term": {
-      "select_list": "Select list",
-      "tasks": "Tasks",
-      "new": "New",
+      "collapse": "Collapse",
+      "delete": "Delete",
+      "description": "Description",
       "edit": "Edit",
-      "preferences": "Preferences",
+      "expand": "Expand",
+      "external_link": "External link",
+      "infos": "Infos",
       "language": "Language",
-      "select_lang": "Select language"
+      "new": "New",
+      "preferences": "Preferences",
+      "select_lang": "Select language",
+      "select_list": "Select list",
+      "tasks": "Tasks"
     },
     "lang": {
       "english": "English",
