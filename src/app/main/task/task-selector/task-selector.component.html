@@ -2,6 +2,7 @@
             class="task-selector"
             [options]="(allTasks$ | async)"
             optionLabel="name"
+            [placeholder]="('i18n.term.no_task' | translate) + '!'"
             (onChange)="selectTask($event.value)"
             itemSize="30"
 ></p-dropdown>

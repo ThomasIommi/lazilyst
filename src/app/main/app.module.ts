@@ -11,18 +11,18 @@ import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { FieldsetModule } from 'primeng/fieldset';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsIonicStorageModule } from '@iommi/ngxs-ionic-storage';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+import { CardModule } from 'primeng/card';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { TaskSelectorComponent } from './main/task/task-selector/task-selector.component';
-import { GlobalMenuComponent } from './main/global-menu/global-menu.component';
-import { DialogComponentsModule } from './shared/modules/dialog-components/dialog-components.module';
-import { TaskInfosComponent } from './main/task/task-infos/task-infos.component';
-import { environment } from '../environments/environment';
-import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
-import { applicationStates } from './state/store-index';
-import { AppState } from './state/app.state';
-import { FormsModule } from '@angular/forms';
+import { TaskSelectorComponent } from './task/task-selector/task-selector.component';
+import { GlobalMenuComponent } from './global-menu/global-menu.component';
+import { DialogComponentsModule } from '../shared/modules/dialog-components/dialog-components.module';
+import { TaskInfosComponent } from './task/task-infos/task-infos.component';
+import { environment } from '../../environments/environment';
+import { applicationStates } from '../state/store-index';
+import { AppState } from '../state/app.state';
 
 /** NgxTranslate basic http loader */
 export function HttpLoaderFactory(http: HttpClient) {
@@ -41,6 +41,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     BrowserModule,
     BrowserAnimationsModule,
     ButtonModule,
+    CardModule,
     DialogComponentsModule,
     DynamicDialogModule,
     DropdownModule,
@@ -66,8 +67,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       },
       defaultLanguage: 'en'
-    }),
-    FormsModule
+    })
   ],
   providers: [DialogService],
   bootstrap: [AppComponent]

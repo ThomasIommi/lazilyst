@@ -1,0 +1,20 @@
+.select-lang-flag {
+  font-size: 2rem;
+  background-size: cover;
+  cursor: pointer;
+  background-color: #fff;
+  border: 0;
+  outline: 0;
+  &:focus {
+    box-shadow: 0 0 0 .1em #8dcdff;
+    border-color: #007ad9;
+    border-radius: .1em;
+  }
+  &:hover {
+    opacity: .75;
+  }
+}
+.languages-container {
+  display: flex;
+  justify-content: space-evenly;
+}

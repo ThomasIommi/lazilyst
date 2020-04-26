@@ -1,14 +1,3 @@
-.description-button {
-  border-radius: .5rem;
-  margin: 0 .1rem;
-  &:first-child {
-    margin-left: .25rem;
-  }
-  & ::ng-deep > button {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-}
 .task-property:not(:last-child) {
   margin-bottom: .5rem;
 }

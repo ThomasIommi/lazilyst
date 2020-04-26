@@ -1,0 +1,29 @@
+<div class="app-container">
+  <div class="p-grid p-justify-between">
+    <div class="p-col-fixed">
+      <app-task-selector></app-task-selector>
+    </div>
+    <div class="p-col-fixed">
+      <app-global-menu></app-global-menu>
+    </div>
+  </div>
+  <hr>
+  <div class="p-grid p-justify-center p-align-center">
+    <div *ngIf="(currentTask$ | async) != null; else welcome"
+         class="p-col">
+      <app-task-infos></app-task-infos>
+    </div>
+    <!-- TODO all done card & distinguish 1st access from other access (state 1st save consequence in preferences) -->
+    <ng-template #welcome>
+      <div class="p-col-fixed welcome-card">
+        <p-card [header]="('i18n.term.welcome' | translate) + '!'">
+          <p-header>
+            <img alt="Desktop Image" src="assets/images/photo1.jpeg">
+          </p-header>
+          {{ 'i18n.sentence.welcome_tutorial' | translate }}
+        </p-card>
+      </div>
+    </ng-template>
+  </div>
+</div>
+

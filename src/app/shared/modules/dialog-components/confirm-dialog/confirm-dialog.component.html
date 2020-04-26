@@ -1,0 +1,28 @@
+<div class="p-grid">
+  <div class="p-col-fixed confirm-icon"
+       *ngIf="confirmDialogData.icon != null">
+    <i [class]="confirmDialogData.icon"></i>
+  </div>
+  <div class="p-col confirm-content">
+    {{ confirmDialogData.content | translate }}
+  </div>
+</div>
+<div class="p-grid p-justify-end confirm-buttons">
+  <div class="p-col-fixed">
+    <p-button styleClass="ui-button-secondary"
+              icon="pi pi-times"
+              [label]="confirmDialogData.buttonNoLabel | translate"
+              [title]="confirmDialogData.buttonNoLabel | translate"
+              (click)="cancel()"
+    ></p-button>
+  </div>
+  <div class="p-col-fixed">
+    <p-button styleClass="ui-button-success"
+              icon="pi pi-check"
+              [label]="confirmDialogData.buttonOkLabel | translate"
+              [title]="confirmDialogData.buttonOkLabel | translate"
+              (click)="confirm()"
+    ></p-button>
+  </div>
+</div>
+

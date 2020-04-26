@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Task } from '../../../shared/models/task';
 import { TasksState } from '../../../state/tasks/tasks.state';
 
+
 @Component({
   selector: 'app-task-infos',
   templateUrl: './task-infos.component.html',
@@ -25,4 +26,8 @@ export class TaskInfosComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  /** Check if there is at least some info to display */
+  thereIsInfo(task: Task): boolean {
+    return task.description != null || task.link != null;
+  }
 }

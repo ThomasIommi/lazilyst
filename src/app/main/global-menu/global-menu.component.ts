@@ -1,14 +1,21 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { take, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { combineLatest, Observable, Subject } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
+import { Select, Store } from '@ngxs/store';
 
 import { MenuItemLabel } from '../../shared/models/menu-item-label';
-import { LangSelectionComponent } from '../../shared/modules/dialog-components/lang-selection/lang-selection.component';
-import { Store } from '@ngxs/store';
+import { LangSelectionDialogComponent } from '../../shared/modules/dialog-components/lang-selection-dialog/lang-selection-dialog.component';
 import { SelectLang } from '../../state/preferences/preferences.actions';
+import { NewTaskDialogComponent } from '../../shared/modules/dialog-components/new-task-dialog/new-task-dialog.component';
+import { Task } from 'src/app/shared/models/task';
+import { DeleteCurrentTask, SaveTask } from '../../state/tasks/tasks.actions';
+import { ConfirmDialogComponent } from '../../shared/modules/dialog-components/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogData } from '../../shared/modules/dialog-components/confirm-dialog/confirm-dialog-data';
+import { TasksState } from '../../state/tasks/tasks.state';
+
 
 @Component({
   selector: 'app-global-menu',
@@ -20,7 +27,10 @@ export class GlobalMenuComponent implements OnInit, OnDestroy {
   /** Available menu items */
   menuItems: MenuItem[];
 
-  /** Destroy subscription signal */
+  /** Current task observable from NGXS app state */
+  @Select(TasksState.currentTask) currentTask$: Observable<Task>;
+
+  /** Destroys subscription signal */
   private onDestroySubject: Subject<boolean> = new Subject<boolean>();
 
   /**
@@ -45,26 +55,32 @@ export class GlobalMenuComponent implements OnInit, OnDestroy {
     this.onDestroySubject.unsubscribe();
   }
 
-  /** Initialize menu with i18n translated labels */
+  /** Initializes menu with i18n translated labels */
   private initMenu(): void {
-    this.translateService.stream(Object.values(MenuItemLabel))
-      .pipe(takeUntil(this.onDestroySubject))
-      .subscribe((translationMap: object) => {
+    combineLatest([
+      this.translateService.stream(Object.values(MenuItemLabel)),
+      this.currentTask$
+    ]).pipe(takeUntil(this.onDestroySubject))
+      .subscribe(([translationMap, currentTask]) => {
         this.menuItems = [
           {
             label: translationMap[MenuItemLabel.LISTS],
             items: [
               {
-                label: translationMap[MenuItemLabel.NEW], // TODO new task
-                icon: 'pi pi-fw pi-plus'
+                label: translationMap[MenuItemLabel.NEW],
+                icon: 'pi pi-fw pi-plus',
+                command: this.openNewTaskModal.bind(this)
               },
               {
                 label: translationMap[MenuItemLabel.EDIT], // TODO edit task
-                icon: 'pi pi-fw pi-pencil'
+                icon: 'pi pi-fw pi-pencil',
+                disabled: currentTask == null
               },
               {
-                label: translationMap[MenuItemLabel.DELETE], // TODO delete task
-                icon: 'pi pi-fw pi-trash'
+                label: translationMap[MenuItemLabel.DELETE],
+                icon: 'pi pi-fw pi-trash',
+                command: this.openConfirmTaskDeleteModal.bind(this),
+                disabled: currentTask == null
               }
             ]
           },
@@ -74,7 +90,7 @@ export class GlobalMenuComponent implements OnInit, OnDestroy {
               {
                 label: translationMap[MenuItemLabel.LANGUAGE],
                 icon: 'pi pi-fw pi-globe',
-                command: () => this.openSelectLanguageModal()
+                command: this.openSelectLanguageModal.bind(this)
               }
             ]
           }
@@ -82,12 +98,43 @@ export class GlobalMenuComponent implements OnInit, OnDestroy {
       });
   }
 
-  /** Open a modal to select the user language preference */
+  /** Opens a modal to select the user language preference and reacts to its changes */
   private async openSelectLanguageModal(): Promise<void> {
-    const dialogRef = this.dialogService.open(LangSelectionComponent, {
+    const dialogRef = this.dialogService.open(LangSelectionDialogComponent, {
       header: this.translateService.instant('i18n.term.select_lang')
     });
-    const selectedLang = await dialogRef.onClose.pipe(take(1)).toPromise();
+    const selectedLang: string = await dialogRef.onClose.pipe(take(1)).toPromise();
     this.store.dispatch(new SelectLang(selectedLang));
   }
+
+  /** Opens a modal to handle the insertion of a new task and reacts to its creation */
+  private async openNewTaskModal(): Promise<void> {
+    const dialogRef = this.dialogService.open(NewTaskDialogComponent, {
+      header: this.translateService.instant('i18n.term.new_task'),
+      style: {
+        minWidth: '20rem',
+        width: '75%'
+      }
+    });
+    const newTask: Task = await dialogRef.onClose.pipe(take(1)).toPromise();
+    this.store.dispatch(new SaveTask(newTask));
+  }
+
+  /** Opens a modal to ask confirmation for the task deletion */
+  private async openConfirmTaskDeleteModal(): Promise<void> {
+    const dialogRef = this.dialogService.open(ConfirmDialogComponent, {
+      header: this.translateService.instant('i18n.term.confirm') + '?',
+      width: '75%',
+      data: {
+        content: 'i18n.sentence.confirm_task_deletion',
+        icon: 'pi pi-exclamation-triangle'
+      } as ConfirmDialogData
+    });
+    const result: boolean = await dialogRef.onClose.pipe(take(1)).toPromise();
+    if (result) {
+      this.store.dispatch(new DeleteCurrentTask());
+    }
+  }
+
+
 }

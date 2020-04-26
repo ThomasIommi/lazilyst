@@ -2,6 +2,7 @@
   "i18n": {
     "term": {
       "collapse": "Collassa",
+      "confirm": "Conferma",
       "delete": "Elimina",
       "description": "Descrizione",
       "edit": "Modifica",
@@ -9,15 +10,32 @@
       "external_link": "Collegamento esterno",
       "infos": "Informazioni",
       "language": "Lingua",
+      "name": "Nome",
       "new": "Nuovo",
+      "new_task": "Nuovo task",
+      "no": "No",
+      "no_task": "Nessun task",
+      "ok": "Ok",
+      "options": "Opzioni",
       "preferences": "Preferenze",
+      "required_field": "Campo obbligatorio",
+      "reset": "Ripristina",
+      "save": "Salva",
       "select_lang": "Seleziona lingua",
       "select_list": "Seleziona lista",
-      "tasks": "Task"
+      "tasks": "Task",
+      "welcome": "Benvenuto"
     },
     "lang": {
       "english": "Inglese",
       "italian": "Italiano"
+    },
+    "field": {
+      "name": "Nome"
+    },
+    "sentence": {
+      "confirm_task_deletion": "Vuoi davvero eliminare il task corrente?\nQuesta operazione è irreversibile",
+      "welcome_tutorial": "Benvenuto su Lazilyst!\n\nFai clic sul pulsante di opzioni (︙) per aggiungere un nuovo task ed iniziare!\n\nPuoi anche connettere questa app con Google Drive, iCloud o OneDrive per l'archiviazione cloud e la sincronizzazione con altri dispositivi!"
     }
   }
 }

@@ -1,0 +1,13 @@
+$box-shadow-error: 0 0 0 0.2em #ffa3a3 !default;
+$border-color-error: #b30000 !default;
+
+/** Field still invalid after touching it */
+.ui-inputtext:enabled.ng-invalid.ng-touched {
+  border-color: $border-color-error;
+  &:focus:not(.ui-state-error) {
+    outline: 0 none;
+    outline-offset: 0;
+    box-shadow: $box-shadow-error;
+    border-color: $border-color-error;
+  }
+}

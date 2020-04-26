@@ -1,9 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { PreferencesState } from './state/preferences/preferences.state';
 import { Select } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
+
+import { PreferencesState } from '../state/preferences/preferences.state';
+import { TasksState } from '../state/tasks/tasks.state';
+import { Task } from '../shared/models/task';
+
 
 @Component({
   selector: 'app-root',
@@ -14,6 +18,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   /** App language observable from NGXS app state */
   @Select(PreferencesState.lang) lang$: Observable<string>;
+
+  /** Current task observable from NGXS app state */
+  @Select(TasksState.currentTask) currentTask$: Observable<Task>;
 
   /** Destroy subscription signal */
   private onDestroySubject: Subject<boolean> = new Subject<boolean>();

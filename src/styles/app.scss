@@ -1,0 +1,13 @@
+/* You can add global styles to this file, and also import other style files */
+@import "forms";
+
+$border-color: #c8c8c8;
+
+hr {
+  border: .5px solid $border-color;
+}
+
+/** CSS fix for PrimeNG p-messages displayed inline for some reason */
+.ui-messages ul {
+  display: block;
+}

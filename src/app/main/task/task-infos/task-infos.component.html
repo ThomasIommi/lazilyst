@@ -1,5 +1,5 @@
-<div *ngIf="(currentTask$ | async) != null; else welcome">
-  <p-fieldset *ngIf="(currentTask$ | async).description != null" [toggleable]="true">
+<div *ngIf="(currentTask$ | async) != null">
+  <p-fieldset *ngIf="thereIsInfo((currentTask$ | async))" [toggleable]="true">
     <p-header>
       {{ 'i18n.term.infos' | translate }}
     </p-header>
@@ -12,7 +12,3 @@
     </div>
   </p-fieldset>
 </div>
-<ng-template #welcome>
-  <!-- TODO Welcome message + instructions -->
-  TODO WELCOME & INSTRUCTIONS
-</ng-template>

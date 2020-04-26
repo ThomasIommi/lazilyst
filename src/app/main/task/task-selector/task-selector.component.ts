@@ -8,6 +8,7 @@ import { Task } from '../../../shared/models/task';
 import { SelectTask } from '../../../state/tasks/tasks.actions';
 import { TasksState } from '../../../state/tasks/tasks.state';
 
+
 @Component({
   selector: 'app-task-selector',
   templateUrl: './task-selector.component.html',
@@ -23,7 +24,7 @@ export class TaskSelectorComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('dropdown') dropdown: Dropdown;
 
-  /** Destroy subscription signal */
+  /** Destroys subscription signal */
   private onDestroySubject: Subject<boolean> = new Subject<boolean>();
 
   /**
@@ -52,15 +53,14 @@ export class TaskSelectorComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   /**
-   * Select the current task
+   * Selects the current task
    * @param selectedTask Selected task
    */
   selectTask(selectedTask: Task): void {
     this.store.dispatch(new SelectTask(selectedTask));
   }
 
-  /** Automatically select the real current task on app state changes */
-  // FIXME try with ngModel
+  /** Automatically selects the real current task on app state changes */
   private initCurrentTaskUpdater(): void {
     this.currentTask$.pipe(takeUntil(this.onDestroySubject)).subscribe((newCurrentTask: Task) => {
       this.dropdown.writeValue(newCurrentTask);

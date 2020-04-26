@@ -1,15 +1,22 @@
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Injectable } from '@angular/core';
+import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
 import produce from 'immer';
 
 import { SelectLang } from './preferences.actions';
-import { Injectable } from '@angular/core';
+import { TasksStateModel } from '../tasks/tasks.state';
 
+
+/** Preferences state model */
 export class PreferencesStateModel {
   public lang: string;
 }
 
+/** Token to identify preferences state */
+export const PREFERENCES_STATE_TOKEN = new StateToken<TasksStateModel>('preferences');
+
+/** NGXS app preferences substate */
 @State<PreferencesStateModel>({
-  name: 'preferences',
+  name: PREFERENCES_STATE_TOKEN,
   defaults: {
     lang: 'en'
   }
@@ -27,7 +34,8 @@ export class PreferencesState {
   /** Change app language action */
   @Action(SelectLang)
   selectLang(ctx: StateContext<PreferencesStateModel>, action: SelectLang): void {
-    ctx.setState(produce((draft: PreferencesStateModel) => {
+    const base = ctx.getState();
+    ctx.setState(produce(base, (draft: PreferencesStateModel) => {
       draft.lang = action.payload;
     }));
   }
