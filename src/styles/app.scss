@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import "forms";
+@import "variables";
 
 $border-color: #c8c8c8;
 
@@ -10,4 +11,19 @@ hr {
 /** CSS fix for PrimeNG p-messages displayed inline for some reason */
 .ui-messages ul {
   display: block;
+}
+
+/** Global Theming */
+body {
+  margin-bottom: 5rem;
+  .ui-card, .ui-fieldset, .ui-dropdown, .ui-button {
+    box-shadow: $box-shadow;
+  }
+  .welcome-card {
+    max-width: 20rem;
+    margin-top: 2rem;
+  }
+  p-card {
+    white-space: pre-line;
+  }
 }

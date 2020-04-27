@@ -13,6 +13,8 @@ import { NgxsModule } from '@ngxs/store';
 import { NgxsIonicStorageModule } from '@iommi/ngxs-ionic-storage';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { CardModule } from 'primeng/card';
+import { CheckboxModule } from 'primeng/checkbox';
+import { InputTextModule } from 'primeng/inputtext';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -21,8 +23,10 @@ import { GlobalMenuComponent } from './global-menu/global-menu.component';
 import { DialogComponentsModule } from '../shared/modules/dialog-components/dialog-components.module';
 import { TaskInfosComponent } from './task/task-infos/task-infos.component';
 import { environment } from '../../environments/environment';
-import { applicationStates } from '../state/store-index';
-import { AppState } from '../state/app.state';
+import { applicationStates, applicationStateTokens } from '../state/store-index';
+import { ActivitiesListComponent } from './task/activity/activities-list/activities-list.component';
+import { SingleActivityComponent } from './task/activity/single-activity/single-activity.component';
+import { CreateActivityButtonComponent } from './task/activity/create-activity-button/create-activity-button.component';
 
 /** NgxTranslate basic http loader */
 export function HttpLoaderFactory(http: HttpClient) {
@@ -34,7 +38,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppComponent,
     TaskSelectorComponent,
     GlobalMenuComponent,
-    TaskInfosComponent
+    TaskInfosComponent,
+    ActivitiesListComponent,
+    SingleActivityComponent,
+    CreateActivityButtonComponent
   ],
   imports: [
     AppRoutingModule,
@@ -42,22 +49,25 @@ export function HttpLoaderFactory(http: HttpClient) {
     BrowserAnimationsModule,
     ButtonModule,
     CardModule,
+    CheckboxModule,
     DialogComponentsModule,
     DynamicDialogModule,
     DropdownModule,
     FieldsetModule,
     HttpClientModule,
+    InputTextModule,
     MenuModule,
     NgxsIonicStorageModule.forRoot({
       storeName: 'AppState',
-      name: 'lazilystAppStorage',
-      version: 1.0
+      name: 'LazilystAppStorage',
+      version: 1.0,
+      key: applicationStateTokens
     }),
     NgxsModule.forRoot(applicationStates, {
       developmentMode: !environment.production
     }),
     NgxsReduxDevtoolsPluginModule.forRoot({
-      name: 'lazilystAppState',
+      name: 'LazilystAppState',
       disabled: environment.production
     }),
     TranslateModule.forRoot({

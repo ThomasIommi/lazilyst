@@ -36,7 +36,12 @@
               "node_modules/flag-icon-css/css/flag-icon.min.css",
               "src/styles/app.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "./src/styles"
+              ]
+            }
           },
           "configurations": {
             "production": {

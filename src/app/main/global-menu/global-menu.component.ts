@@ -11,10 +11,11 @@ import { LangSelectionDialogComponent } from '../../shared/modules/dialog-compon
 import { SelectLang } from '../../state/preferences/preferences.actions';
 import { NewTaskDialogComponent } from '../../shared/modules/dialog-components/new-task-dialog/new-task-dialog.component';
 import { Task } from 'src/app/shared/models/task';
-import { DeleteCurrentTask, SaveTask } from '../../state/tasks/tasks.actions';
+import { CreateTask, DeleteCurrentTask, UpdateTask } from '../../state/tasks/tasks.actions';
 import { ConfirmDialogComponent } from '../../shared/modules/dialog-components/confirm-dialog/confirm-dialog.component';
 import { ConfirmDialogData } from '../../shared/modules/dialog-components/confirm-dialog/confirm-dialog-data';
-import { TasksState } from '../../state/tasks/tasks.state';
+import { TASKS_STATE_TOKEN, TasksState, TasksStateModel } from '../../state/tasks/tasks.state';
+import { EditTaskDialogComponent } from '../../shared/modules/dialog-components/edit-task-dialog/edit-task-dialog.component';
 
 
 @Component({
@@ -72,8 +73,9 @@ export class GlobalMenuComponent implements OnInit, OnDestroy {
                 command: this.openNewTaskModal.bind(this)
               },
               {
-                label: translationMap[MenuItemLabel.EDIT], // TODO edit task
+                label: translationMap[MenuItemLabel.EDIT],
                 icon: 'pi pi-fw pi-pencil',
+                command: this.openEditTaskModal.bind(this),
                 disabled: currentTask == null
               },
               {
@@ -101,7 +103,10 @@ export class GlobalMenuComponent implements OnInit, OnDestroy {
   /** Opens a modal to select the user language preference and reacts to its changes */
   private async openSelectLanguageModal(): Promise<void> {
     const dialogRef = this.dialogService.open(LangSelectionDialogComponent, {
-      header: this.translateService.instant('i18n.term.select_lang')
+      header: this.translateService.instant('i18n.term.select_lang'),
+      style: {
+        minWidth: '12rem'
+      }
     });
     const selectedLang: string = await dialogRef.onClose.pipe(take(1)).toPromise();
     this.store.dispatch(new SelectLang(selectedLang));
@@ -117,7 +122,21 @@ export class GlobalMenuComponent implements OnInit, OnDestroy {
       }
     });
     const newTask: Task = await dialogRef.onClose.pipe(take(1)).toPromise();
-    this.store.dispatch(new SaveTask(newTask));
+    this.store.dispatch(new CreateTask(newTask));
+  }
+
+  /** Opens a modal to handle the editing of the current task and reacts to its changing */
+  private async openEditTaskModal(): Promise<void> {
+    const dialogRef = this.dialogService.open(EditTaskDialogComponent, {
+      header: this.translateService.instant('i18n.term.edit_task'),
+      style: {
+        minWidth: '20rem',
+        width: '75%'
+      },
+      data: this.store.selectSnapshot<TasksStateModel>(TASKS_STATE_TOKEN).current
+    });
+    const updatedTask: Task = await dialogRef.onClose.pipe(take(1)).toPromise();
+    this.store.dispatch(new UpdateTask(updatedTask));
   }
 
   /** Opens a modal to ask confirmation for the task deletion */

@@ -1,19 +1,24 @@
 {
   "i18n": {
     "term": {
+      "activities": "Attività",
       "collapse": "Collassa",
       "confirm": "Conferma",
       "delete": "Elimina",
       "description": "Descrizione",
+      "desktop": "Scrivania",
       "edit": "Modifica",
+      "edit_task": "Modifica task",
       "expand": "Espandi",
       "external_link": "Collegamento esterno",
+      "guy_sleeping_on_work": "Tizio che dorme sul lavoro",
       "infos": "Informazioni",
       "language": "Lingua",
       "name": "Nome",
       "new": "Nuovo",
       "new_task": "Nuovo task",
       "no": "No",
+      "no_activities": "Nessuna attività",
       "no_task": "Nessun task",
       "ok": "Ok",
       "options": "Opzioni",
@@ -24,7 +29,7 @@
       "select_lang": "Seleziona lingua",
       "select_list": "Seleziona lista",
       "tasks": "Task",
-      "welcome": "Benvenuto"
+      "welcome_on_lazilyst": "Benvenuto su Lazilyst"
     },
     "lang": {
       "english": "Inglese",
@@ -34,8 +39,9 @@
       "name": "Nome"
     },
     "sentence": {
+      "create_new_activities": "Sembrano non esserci attività in questo task!\n\nCrea nuove attività premendo l'apposito pulsante (+) in basso!",
       "confirm_task_deletion": "Vuoi davvero eliminare il task corrente?\nQuesta operazione è irreversibile",
-      "welcome_tutorial": "Benvenuto su Lazilyst!\n\nFai clic sul pulsante di opzioni (︙) per aggiungere un nuovo task ed iniziare!\n\nPuoi anche connettere questa app con Google Drive, iCloud o OneDrive per l'archiviazione cloud e la sincronizzazione con altri dispositivi!"
+      "welcome_tutorial": "Fai clic sul pulsante di opzioni (︙) per aggiungere un nuovo task ed iniziare!\n\nPuoi anche connettere questa app con Google Drive, iCloud o OneDrive per l'archiviazione cloud e la sincronizzazione con altri dispositivi!"
     }
   }
 }

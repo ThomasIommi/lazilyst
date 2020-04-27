@@ -1,5 +1,4 @@
-$box-shadow-error: 0 0 0 0.2em #ffa3a3 !default;
-$border-color-error: #b30000 !default;
+@import "variables";
 
 /** Field still invalid after touching it */
 .ui-inputtext:enabled.ng-invalid.ng-touched {

@@ -1,12 +1,15 @@
-<div *ngIf="(currentTask$ | async) != null">
-  <p-fieldset *ngIf="thereIsInfo((currentTask$ | async))" [toggleable]="true">
+<div *ngIf="(currentTask$ | async) != null && thereIsInfo(currentTask$ | async)"
+     class="task-info-container">
+  <p-fieldset [toggleable]="true">
     <p-header>
       {{ 'i18n.term.infos' | translate }}
     </p-header>
-    <div *ngIf="(currentTask$ | async).description != null" class="task-property description">
+    <div *ngIf="(currentTask$ | async).description != null"
+         class="task-property description">
       <b>{{ 'i18n.term.description' | translate }}</b>: {{ (currentTask$ | async).description }}
     </div>
-    <div *ngIf="(currentTask$ | async).link != null" class="task-property link">
+    <div *ngIf="(currentTask$ | async).link != null"
+         class="task-property link">
       <b>{{ 'i18n.term.external_link' | translate }}</b>:
       <a [href]="(currentTask$ | async).link">{{ (currentTask$ | async).link }}</a>
     </div>

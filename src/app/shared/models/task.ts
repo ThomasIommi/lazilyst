@@ -1,4 +1,5 @@
 import { BaseEntity } from './base-entity';
+import { Activity } from './activity';
 
 
 export class Task extends BaseEntity {
@@ -8,11 +9,12 @@ export class Task extends BaseEntity {
   description: string;
   /** Task external link */
   link: string;
+  /** Task activities */
+  activities: Activity[] = [];
 
   /** Basic costructor */
-  constructor(name: string) {
+  constructor() {
     super();
-    this.name = name;
   }
 
 }

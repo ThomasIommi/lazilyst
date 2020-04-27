@@ -8,22 +8,24 @@
     </div>
   </div>
   <hr>
-  <div class="p-grid p-justify-center p-align-center">
-    <div *ngIf="(currentTask$ | async) != null; else welcome"
-         class="p-col">
-      <app-task-infos></app-task-infos>
-    </div>
-    <!-- TODO all done card & distinguish 1st access from other access (state 1st save consequence in preferences) -->
-    <ng-template #welcome>
-      <div class="p-col-fixed welcome-card">
-        <p-card [header]="('i18n.term.welcome' | translate) + '!'">
-          <p-header>
-            <img alt="Desktop Image" src="assets/images/photo1.jpeg">
-          </p-header>
-          {{ 'i18n.sentence.welcome_tutorial' | translate }}
-        </p-card>
-      </div>
-    </ng-template>
-  </div>
+  <ng-container *ngIf="(currentTask$ | async) != null; else welcome">
+    <app-task-infos></app-task-infos>
+    <app-activities-list></app-activities-list>
+    <app-create-activity-button></app-create-activity-button>
+  </ng-container>
 </div>
+
+<ng-template #welcome>
+  <div class="p-grid p-justify-center p-align-center">
+    <div class="p-col-fixed welcome-card">
+      <p-card [header]="('i18n.term.welcome_on_lazilyst' | translate) + '!'">
+        <p-header>
+          <img [alt]="'i18n.term.desktop' | translate" src="assets/images/welcome-card.jpg">
+        </p-header>
+        {{ 'i18n.sentence.welcome_tutorial' | translate }}
+      </p-card>
+    </div>
+  </div>
+</ng-template>
+
 

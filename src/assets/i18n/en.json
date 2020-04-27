@@ -1,19 +1,24 @@
 {
   "i18n": {
     "term": {
+      "activities": "Activities",
       "collapse": "Collapse",
       "confirm": "Confirm",
       "delete": "Delete",
       "description": "Description",
+      "desktop": "Desktop",
       "edit": "Edit",
+      "edit_task": "Edit task",
       "expand": "Expand",
       "external_link": "External link",
+      "guy_sleeping_on_work": "Guy sleeping on work",
       "infos": "Infos",
       "language": "Language",
       "name": "Name",
       "new": "New",
       "new_task": "New task",
       "no": "No",
+      "no_activities": "No activities",
       "no_task": "No task",
       "ok": "Ok",
       "options": "Options",
@@ -24,7 +29,7 @@
       "select_lang": "Select language",
       "select_list": "Select list",
       "tasks": "Tasks",
-      "welcome": "Welcome"
+      "welcome_on_lazilyst": "Welcome on Lazilyst"
     },
     "lang": {
       "english": "English",
@@ -34,8 +39,9 @@
       "name": "Name"
     },
     "sentence": {
+      "create_new_activities": "There seem to be no activity in this task!\n\nCreate new activities by pressing the button (+) below!",
       "confirm_task_deletion": "Do you really want to delete the current task?\nThis operation is irreversible",
-      "welcome_tutorial": "Welcome on Lazilyst!\n\nClick the options button (︙) to add a new task and get started!\n\nYou can also connect this app with Google Drive, iCloud or OneDrive for cloud storage and syncronization with other devices!"
+      "welcome_tutorial": "Click the options button (︙) to add a new task and get started!\n\nYou can also connect this app with Google Drive, iCloud or OneDrive for cloud storage and syncronization with other devices!"
     }
   }
 }

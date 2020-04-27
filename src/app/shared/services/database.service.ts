@@ -23,6 +23,9 @@ export class DatabaseService {
    * @param elements Elements where to check if generated ID is already used
    */
   getUniqueId(elements: BaseEntity[]): string {
+    if (elements == null || elements.length === 0) {
+      return randomUUID();
+    }
     let candidateId: string;
     let idUsed: boolean;
     do {

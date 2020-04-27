@@ -23,6 +23,7 @@ export const PREFERENCES_STATE_TOKEN = new StateToken<TasksStateModel>('preferen
 })
 @Injectable()
 export class PreferencesState {
+
   // selectors
   /** App language selector */
   @Selector()
@@ -34,8 +35,8 @@ export class PreferencesState {
   /** Change app language action */
   @Action(SelectLang)
   selectLang(ctx: StateContext<PreferencesStateModel>, action: SelectLang): void {
-    const base = ctx.getState();
-    ctx.setState(produce(base, (draft: PreferencesStateModel) => {
+    const state: PreferencesStateModel = ctx.getState();
+    ctx.setState(produce(state, (draft: PreferencesStateModel) => {
       draft.lang = action.payload;
     }));
   }
