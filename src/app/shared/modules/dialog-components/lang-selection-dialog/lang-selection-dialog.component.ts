@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { DialogComponent } from '../dialog-component';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
+
+import { DialogComponent } from '../dialog-component';
 
 
 @Component({

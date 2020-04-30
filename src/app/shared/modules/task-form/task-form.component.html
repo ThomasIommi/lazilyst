@@ -1,8 +1,10 @@
 <form [formGroup]="taskForm" (submit)="saveTask()" class="form">
 
-  <p-messages [closable]="false"
-              [value]="validationErrors"
-  ></p-messages>
+  <div #validationErrorsContainer>
+    <p-messages [closable]="false"
+                [value]="validationErrors">
+    </p-messages>
+  </div>
 
   <div class="p-grid form-container">
     <div class="p-col-12 form-group">
@@ -11,8 +13,7 @@
                appNoBlank
                type="text"
                id="task-name-input"
-               formControlName="name"
-        />
+               formControlName="name">
         <label for="task-name-input">
           {{ 'i18n.term.name' | translate }}
         </label>
@@ -26,8 +27,8 @@
                   type="text"
                   rows="5"
                   [autoResize]="true"
-                  formControlName="description"
-        ></textarea>
+                  formControlName="description">
+        </textarea>
         <label for="task-description-textarea">
           {{ 'i18n.term.description' | translate }}
         </label>
@@ -39,8 +40,7 @@
                appNoBlank
                type="text"
                id="task-link-input"
-               formControlName="link"
-        />
+               formControlName="link">
         <label for="task-link-input">
           {{ 'i18n.term.external_link' | translate }}
         </label>
@@ -54,16 +54,16 @@
                 icon="pi pi-undo"
                 iconPos="right"
                 [label]="'i18n.term.reset' | translate"
-                (click)="resetForm()"
-      ></p-button>
+                (click)="resetForm()">
+      </p-button>
     </div>
     <div class="p-col-fixed">
       <p-button styleClass="ui-button-success"
                 type="submit"
                 icon="pi pi-save"
                 iconPos="right"
-                [label]="'i18n.term.save' | translate"
-      ></p-button>
+                [label]="'i18n.term.save' | translate">
+      </p-button>
     </div>
   </div>
 </form>

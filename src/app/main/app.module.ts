@@ -15,18 +15,23 @@ import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { TaskSelectorComponent } from './task/task-selector/task-selector.component';
-import { GlobalMenuComponent } from './global-menu/global-menu.component';
+import { TaskSelectorComponent } from './header/task-selector/task-selector.component';
+import { GlobalMenuComponent } from './header/global-menu/global-menu.component';
 import { DialogComponentsModule } from '../shared/modules/dialog-components/dialog-components.module';
 import { TaskInfosComponent } from './task/task-infos/task-infos.component';
 import { environment } from '../../environments/environment';
 import { applicationStates, applicationStateTokens } from '../state/store-index';
-import { ActivitiesListComponent } from './task/activity/activities-list/activities-list.component';
-import { SingleActivityComponent } from './task/activity/single-activity/single-activity.component';
-import { CreateActivityButtonComponent } from './task/activity/create-activity-button/create-activity-button.component';
+import { TaskActivitiesComponent } from './task/task-activities/task-activities.component';
+import { ActivityComponent } from './task/task-activities/activity/activity.component';
+import { HeaderComponent } from './header/header.component';
+import { TaskMenuComponent } from './task/task-menu/task-menu.component';
+import { TaskComponent } from './task/task.component';
+import { CommonDirectivesModule } from '../shared/modules/common-directives/common-directives.module';
 
 /** NgxTranslate basic http loader */
 export function HttpLoaderFactory(http: HttpClient) {
@@ -39,9 +44,11 @@ export function HttpLoaderFactory(http: HttpClient) {
     TaskSelectorComponent,
     GlobalMenuComponent,
     TaskInfosComponent,
-    ActivitiesListComponent,
-    SingleActivityComponent,
-    CreateActivityButtonComponent
+    TaskActivitiesComponent,
+    ActivityComponent,
+    HeaderComponent,
+    TaskMenuComponent,
+    TaskComponent
   ],
   imports: [
     AppRoutingModule,
@@ -77,7 +84,10 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       },
       defaultLanguage: 'en'
-    })
+    }),
+    InputTextareaModule,
+    FormsModule,
+    CommonDirectivesModule
   ],
   providers: [DialogService],
   bootstrap: [AppComponent]

@@ -22,6 +22,7 @@ export class TaskSelectorComponent implements OnInit, OnDestroy, AfterViewInit {
   /** Selectable tasks observable from NGXS app state */
   @Select(TasksState.allTasks) allTasks$: Observable<Task[]>;
 
+  /** Reference to dropdown compoent to handle current task changes */
   @ViewChild('dropdown') dropdown: Dropdown;
 
   /** Destroys subscription signal */

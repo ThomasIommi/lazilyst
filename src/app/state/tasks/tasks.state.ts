@@ -1,19 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
 import produce from 'immer';
+import * as deepmerge from 'deepmerge';
 
 import {
   CreateActivity,
   CreateTask,
+  DeleteActivity,
   DeleteCurrentTask,
   SelectTask,
   SyncTasksListWithCurrentTask,
+  UpdateActivity,
   UpdateTask
 } from './tasks.actions';
 import { Task } from 'src/app/shared/models/task';
 import { DatabaseService } from '../../shared/services/database.service';
 import { Activity } from '../../shared/models/activity';
-
 
 /** Tasks state model */
 export class TasksStateModel {
@@ -46,19 +48,19 @@ export class TasksState {
   /** All tasks selector */
   @Selector()
   static allTasks(state: TasksStateModel): Task[] {
-    return state.all;
+    return deepmerge([], state.all);
   }
 
   /** Current task selector */
   @Selector()
   static currentTask(state: TasksStateModel): Task {
-    return state.current;
+    return deepmerge(new Task(), state.current);
   }
 
   /** Current task activities */
   @Selector()
   static currentTaskActivities(state: TasksStateModel): Activity[] {
-    return state.current.activities;
+    return deepmerge([], state.current.activities);
   }
 
   // actions
@@ -66,8 +68,8 @@ export class TasksState {
   @Action(SelectTask)
   selectTask(ctx: StateContext<TasksStateModel>, action: SelectTask): void {
     const state: TasksStateModel = ctx.getState();
-    ctx.setState(produce(state, (draft: TasksStateModel) => {
-      draft.current = action.payload;
+    ctx.setState(produce((draft: TasksStateModel) => {
+      draft.current = action.selectedTask;
     }));
   }
 
@@ -75,9 +77,9 @@ export class TasksState {
   @Action(CreateTask)
   createTask(ctx: StateContext<TasksStateModel>, action: CreateTask): void {
     const state: TasksStateModel = ctx.getState();
-    const newTask = Object.assign(new Task(), action.payload);
+    const newTask = deepmerge(new Task(), action.newTask);
     newTask._id = this.databaseService.getUniqueId(state.all);
-    ctx.setState(produce(state, (draft: TasksStateModel) => {
+    ctx.setState(produce((draft: TasksStateModel) => {
       draft.all.push(newTask);
     }));
     ctx.dispatch(new SelectTask(newTask));
@@ -87,8 +89,8 @@ export class TasksState {
   @Action(UpdateTask)
   updateTask(ctx: StateContext<TasksStateModel>, action: UpdateTask): void {
     const state: TasksStateModel = ctx.getState();
-    const mergedTask = {...state.current, ...action.payload}
-    ctx.setState(produce(state, (draft: TasksStateModel) => {
+    const mergedTask = deepmerge(state.current, action.updatedTask);
+    ctx.setState(produce((draft: TasksStateModel) => {
       draft.current = mergedTask;
     }));
     ctx.dispatch(new SyncTasksListWithCurrentTask());
@@ -100,7 +102,7 @@ export class TasksState {
     const state: TasksStateModel = ctx.getState();
     const index = state.all.findIndex(task => task._id === state.current._id);
     if (index !== -1) {
-      ctx.setState(produce(state, (draft: TasksStateModel) => {
+      ctx.setState(produce((draft: TasksStateModel) => {
         draft.all.splice(index, 1);
       }));
     }
@@ -113,7 +115,7 @@ export class TasksState {
     const state: TasksStateModel = ctx.getState();
     const index = state.all.findIndex(task => task._id === state.current._id);
     if (index !== -1) {
-      ctx.setState(produce(state, (draft: TasksStateModel) => {
+      ctx.setState(produce((draft: TasksStateModel) => {
         draft.all[index] = state.current;
       }));
     }
@@ -121,13 +123,39 @@ export class TasksState {
 
   /** Creates an empty activity and adds it to the current task activities */
   @Action(CreateActivity)
-  createActivity(ctx: StateContext<TasksStateModel>): void {
+  createActivity(ctx: StateContext<TasksStateModel>, action: CreateActivity): void {
     const state: TasksStateModel = ctx.getState();
     const activity = new Activity();
     activity._id = this.databaseService.getUniqueId(state.current.activities);
-    ctx.setState(produce(state, (draft: TasksStateModel) => {
-      draft.current.activities.push(activity);
+    ctx.setState(produce((draft: TasksStateModel) => {
+      if (action.index == null) {
+        draft.current.activities.push(activity);
+      } else {
+        draft.current.activities.splice(action.index + 1, 0, activity);
+      }
     }));
     ctx.dispatch(new SyncTasksListWithCurrentTask());
   }
+
+  /** Deletes an activity based on its index */
+  @Action(DeleteActivity)
+  deleteActivity(ctx: StateContext<TasksStateModel>, action: DeleteActivity): void {
+    const state: TasksStateModel = ctx.getState();
+    ctx.setState(produce((draft: TasksStateModel) => {
+      draft.current.activities.splice(action.index, 1);
+    }));
+    ctx.dispatch(new SyncTasksListWithCurrentTask());
+  }
+
+  /** Updates an activity based on its index */
+  @Action(UpdateActivity)
+  updateActivity(ctx: StateContext<TasksStateModel>, action: UpdateActivity): void {
+    const state: TasksStateModel = ctx.getState();
+    ctx.setState(produce((draft: TasksStateModel) => {
+      draft.current.activities[action.index] = action.updatedActivity;
+    }));
+    ctx.dispatch(new SyncTasksListWithCurrentTask());
+  }
+
+
 }

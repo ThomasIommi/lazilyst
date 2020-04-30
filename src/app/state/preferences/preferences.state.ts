@@ -37,7 +37,7 @@ export class PreferencesState {
   selectLang(ctx: StateContext<PreferencesStateModel>, action: SelectLang): void {
     const state: PreferencesStateModel = ctx.getState();
     ctx.setState(produce(state, (draft: PreferencesStateModel) => {
-      draft.lang = action.payload;
+      draft.lang = action.selectedLang;
     }));
   }
 }

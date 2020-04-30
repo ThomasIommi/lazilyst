@@ -1,0 +1,19 @@
+@import "variables";
+
+.footer {
+  position: fixed;
+  width: 100vw;
+  bottom: 0;
+  height: 3rem;
+  align-content: flex-end;
+  background-color: $secondary-bg-color;
+}
+
+.create-activity-button {
+  position: relative;
+  bottom: 1.5rem;
+  & ::ng-deep button {
+    font-size: 1.5rem;
+    border-radius: 1.75rem;
+  }
+}

@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Message, MessageService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
 
 import { FormService } from '../../services/form.service';
 import { Task } from '../../models/task';
+import { animate } from '../../functions/animate.functions';
 
 
 @Component({
@@ -19,6 +20,9 @@ export class TaskFormComponent implements OnInit {
 
   /** Input / property binding to bind the task to update to the form */
   @Input() updateTask: Task;
+
+  /** Reference to the validation errors main container to handle animations */
+  @ViewChild('validationErrorsContainer') validationErrorsContainer: ElementRef;
 
   /** New task main FormGroup */
   taskForm: FormGroup;
@@ -60,7 +64,11 @@ export class TaskFormComponent implements OnInit {
   saveTask(): void {
     this.taskForm.markAllAsTouched();
     if (this.taskForm.invalid) {
+      const messagesAlreadyPresent = this.validationErrors.length > 0;
       this.validationErrors = this.formService.validationErrors(this.taskForm);
+      if (messagesAlreadyPresent) {
+        animate(this.validationErrorsContainer, 'shake');
+      }
       return;
     }
     this.taskSaved.emit(this.taskForm.value);

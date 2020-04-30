@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 
-import { CreateActivity } from '../../../../state/tasks/tasks.actions';
+import { CreateActivity } from '../../../state/tasks/tasks.actions';
 
 
 @Component({
-  selector: 'app-create-activity-button',
-  templateUrl: './create-activity-button.component.html',
-  styleUrls: ['./create-activity-button.component.scss']
+  selector: 'app-task-menu',
+  templateUrl: './task-menu.component.html',
+  styleUrls: ['./task-menu.component.scss']
 })
-export class CreateActivityButtonComponent implements OnInit {
+export class TaskMenuComponent implements OnInit {
 
   /**
    * Construction injection

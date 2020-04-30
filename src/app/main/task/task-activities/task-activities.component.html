@@ -4,8 +4,10 @@
     <p-header>
       {{ 'i18n.term.activities' | translate }}
     </p-header>
-    <div *ngFor="let activity of (activities$ | async)">
-      <app-single-activity [activity]="activity"></app-single-activity>
+    <div *ngFor="let activity of (activities$ | async); let i = index">
+      <app-activity [activity]="activity"
+                    [index]="i">
+      </app-activity>
     </div>
   </p-fieldset>
 </div>
