@@ -1,6 +1,7 @@
 {
   "extends": "tslint:recommended",
   "rules": {
+    "typedef": [true, "call-signature"],
     "array-type": false,
     "arrow-parens": false,
     "deprecation": {

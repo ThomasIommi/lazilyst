@@ -5,7 +5,7 @@ import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { Task } from '../../../shared/models/task';
-import { SelectTask } from '../../../state/tasks/tasks.actions';
+import { SelectTaskById } from '../../../state/tasks/tasks.actions';
 import { TasksState } from '../../../state/tasks/tasks.state';
 
 
@@ -20,7 +20,7 @@ export class TaskSelectorComponent implements OnInit, OnDestroy, AfterViewInit {
   @Select(TasksState.currentTask) currentTask$: Observable<Task>;
 
   /** Selectable tasks observable from NGXS app state */
-  @Select(TasksState.allTasks) allTasks$: Observable<Task[]>;
+  @Select(TasksState.all) allTasks$: Observable<Task[]>;
 
   /** Reference to dropdown compoent to handle current task changes */
   @ViewChild('dropdown') dropdown: Dropdown;
@@ -58,13 +58,13 @@ export class TaskSelectorComponent implements OnInit, OnDestroy, AfterViewInit {
    * @param selectedTask Selected task
    */
   selectTask(selectedTask: Task): void {
-    this.store.dispatch(new SelectTask(selectedTask));
+    this.store.dispatch(new SelectTaskById(selectedTask._id));
   }
 
   /** Automatically selects the real current task on app state changes */
   private initCurrentTaskUpdater(): void {
-    this.currentTask$.pipe(takeUntil(this.onDestroySubject)).subscribe((newCurrentTask: Task) => {
-      this.dropdown.writeValue(newCurrentTask);
+    this.currentTask$.pipe(takeUntil(this.onDestroySubject)).subscribe((currentTask: Task) => {
+      this.dropdown.writeValue(currentTask);
     });
   }
 }

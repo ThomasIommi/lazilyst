@@ -14,7 +14,7 @@ import { Task } from 'src/app/shared/models/task';
 import { CreateTask, DeleteCurrentTask, UpdateTask } from '../../../state/tasks/tasks.actions';
 import { ConfirmDialogComponent } from '../../../shared/modules/dialog-components/confirm-dialog/confirm-dialog.component';
 import { ConfirmDialogData } from '../../../shared/modules/dialog-components/confirm-dialog/confirm-dialog-data';
-import { TASKS_STATE_TOKEN, TasksState, TasksStateModel } from '../../../state/tasks/tasks.state';
+import { TasksState } from '../../../state/tasks/tasks.state';
 import { EditTaskDialogComponent } from '../../../shared/modules/dialog-components/edit-task-dialog/edit-task-dialog.component';
 
 
@@ -133,7 +133,7 @@ export class GlobalMenuComponent implements OnInit, OnDestroy {
         minWidth: '20rem',
         width: '75%'
       },
-      data: this.store.selectSnapshot<TasksStateModel>(TASKS_STATE_TOKEN).current
+      data: this.store.selectSnapshot<Task>(TasksState.currentTask)
     });
     const updatedTask: Task = await dialogRef.onClose.pipe(take(1)).toPromise();
     this.store.dispatch(new UpdateTask(updatedTask));

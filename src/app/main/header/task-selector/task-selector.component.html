@@ -1,6 +1,6 @@
 <p-dropdown #dropdown
             class="task-selector"
-            [options]="(allTasks$ | async)"
+            [options]="allTasks$ | async"
             optionLabel="name"
             [placeholder]="('i18n.term.no_task' | translate) + '!'"
             (onChange)="selectTask($event.value)"

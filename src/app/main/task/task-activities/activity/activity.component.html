@@ -1,20 +1,21 @@
 <div #activityContainer class="activity-container">
   <div class="p-col-12 ui-inputgroup">
     <span class="ui-inputgroup-addon">
-      <p-checkbox #activityCheckbox></p-checkbox>
+      <p-checkbox #activityCheckbox
+                  (onChange)="handleChange()">
+      </p-checkbox>
     </span>
     <textarea #textAreaElement
               pInputTextarea
               appNoBlank
               [rows]="1"
               [autoResize]="true"
-              (keydown.enter)="createNewActivity($event)"
-              (keydown.shift.enter)="openActivityOptions($event)"
-              (keydown.alt.delete)="deleteActivity($event)"
-              (focusout)="updateActivity($event)"
+              (keydown.enter)="onEnter($event)"
+              (keydown.shift.enter)="onShiftEnter($event)"
+              (keydown.alt.delete)="onAltDelete($event)"
+              (keyup)="handleChange()"
               [ngClass]="{taskDone: activityCheckbox.checked}"
-              [maxLength]="1023"
-              [(ngModel)]="activity.description">
+              [maxLength]="1023">
     </textarea>
   </div>
 </div>

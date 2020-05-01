@@ -16,7 +16,7 @@ import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -34,7 +34,7 @@ import { TaskComponent } from './task/task.component';
 import { CommonDirectivesModule } from '../shared/modules/common-directives/common-directives.module';
 
 /** NgxTranslate basic http loader */
-export function HttpLoaderFactory(http: HttpClient) {
+export function HttpLoaderFactory(http: HttpClient): TranslateLoader {
   return new TranslateHttpLoader(http);
 }
 
@@ -86,8 +86,8 @@ export function HttpLoaderFactory(http: HttpClient) {
       defaultLanguage: 'en'
     }),
     InputTextareaModule,
-    FormsModule,
-    CommonDirectivesModule
+    CommonDirectivesModule,
+    ReactiveFormsModule
   ],
   providers: [DialogService],
   bootstrap: [AppComponent]

@@ -1,14 +1,19 @@
-<div *ngIf="(activities$ | async) != null && (activities$ | async).length > 0; else noActivities"
+<div *ngIf="activitiesFormArray.controls != null && activitiesFormArray.controls.length > 0; else noActivities"
      class="activities-container">
   <p-fieldset [toggleable]="true">
     <p-header>
       {{ 'i18n.term.activities' | translate }}
     </p-header>
-    <div *ngFor="let activity of (activities$ | async); let i = index">
-      <app-activity [activity]="activity"
-                    [index]="i">
-      </app-activity>
-    </div>
+    <form [formGroup]="taskForm">
+      <ng-container formArrayName="activities">
+        <div *ngFor="let control of activitiesFormArray.controls; let i = index">
+          <app-activity [formControlName]="i"
+                        (createActivity)="addActivity(i)"
+                        (deleteActivity)="deleteActivity(i)">
+          </app-activity>
+        </div>
+      </ng-container>
+    </form>
   </p-fieldset>
 </div>
 

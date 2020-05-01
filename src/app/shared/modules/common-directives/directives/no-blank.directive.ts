@@ -21,7 +21,7 @@ export class NoBlankDirective implements OnChanges {
    * Listens for input value changes, trims the new value
    * and if the new value is empty it resets the form control value to null
    */
-  @HostListener('change') ngOnChanges() {
+  @HostListener('change') ngOnChanges(): void {
     if (this.ngControl.value != null && (typeof this.ngControl.value === 'string')) {
       const newValue = this.ngControl.value.trim();
       this.ngControl.control.setValue(newValue.length > 0 ? newValue : null);

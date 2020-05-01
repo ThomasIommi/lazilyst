@@ -1,44 +1,84 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { Component, ElementRef, EventEmitter, forwardRef, Output, ViewChild } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Checkbox } from 'primeng/checkbox';
 
-import { Activity } from '../../../../shared/models/activity';
 import { animate } from '../../../../shared/functions/animate.functions';
 import { AnimationSpeeds } from '../../../../shared/models/animation-speed';
-import { CreateActivity, DeleteActivity, UpdateActivity } from '../../../../state/tasks/tasks.actions';
+import { Activity } from '../../../../shared/models/activity';
+import * as deepmerge from 'deepmerge';
 
 
 @Component({
   selector: 'app-activity',
   templateUrl: './activity.component.html',
-  styleUrls: ['./activity.component.scss']
+  styleUrls: ['./activity.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => ActivityComponent),
+      multi: true
+    }
+  ]
 })
-export class ActivityComponent implements OnInit, AfterViewInit {
-
-  /** Activity that this component represent */
-  @Input() activity: Activity;
-
-  /** Index of the current activity */
-  @Input() index: number;
+export class ActivityComponent implements ControlValueAccessor {
 
   /** Reference to activity main container to handle animations */
   @ViewChild('activityContainer') activityContainer: ElementRef;
 
-  /** Reference to activity textarea to handle focus */
-  @ViewChild('textAreaElement') textAreaElement: ElementRef;
+  /** Reference to activity textarea */
+  @ViewChild('textAreaElement', {static: true}) textAreaElement: ElementRef;
+
+  /** Reference to activity checkbox */
+  @ViewChild('activityCheckbox', {static: true}) activityCheckbox: Checkbox;
+
+  /** Event emitter to notify the necessity to create a new activity */
+  @Output() createActivity: EventEmitter<void> = new EventEmitter<void>();
+
+  /** Event emitter to notify the necessity to delete this activity */
+  @Output() deleteActivity: EventEmitter<void> = new EventEmitter<void>();
+
+  /** Function to call when the value associated with the widget changes */
+  onChange: any = () => {
+  }
+
+  /** Function to call when the focus is released */
+  onTouch: any = () => {
+  }
 
   /**
-   * Constructor injection
-   * @param store NGXS app store
+   * Saves the default Angular handler for the onChange() function, manages the update of the form binding
+   * and the ng-dirty / ng-pristine flag
    */
-  constructor(private store: Store) {
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
   }
 
-  /** Component main initialization */
-  ngOnInit(): void {
+  /** Saves the default Angular handler for the onTouch() function, manages the flag ng-touched / ng-untouched */
+  registerOnTouched(fn: any): void {
+    this.onTouch = fn;
   }
 
-  ngAfterViewInit(): void {
-    animate(this.activityContainer, 'bounceIn', AnimationSpeeds.FAST);
+  /** Manages the FormControl disabled flag */
+  setDisabledState(isDisabled: boolean): void {
+    this.textAreaElement.nativeElement.disabled = isDisabled;
+  }
+
+  /** Manages the dynamic update of the form value */
+  writeValue(activity: Activity): void {
+    if (activity != null) {
+      this.activityCheckbox.writeValue(!!activity.done);
+      this.textAreaElement.nativeElement.value = activity.description != null ? activity.description : '';
+    } else {
+      this.activityCheckbox.writeValue(false);
+      this.textAreaElement.nativeElement.value = '';
+    }
+  }
+
+  /** Activity onChange handling */
+  handleChange(): void {
+    const description = this.textAreaElement.nativeElement.value;
+    const done = this.activityCheckbox.isChecked();
+    this.onChange({description, done} as Activity);
   }
 
   /**
@@ -49,37 +89,36 @@ export class ActivityComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Creates an new activity on a specific index and then set the focus to it
+   * Sends parent component an event to create a new activity
    * @param event KeyboardEvent <em>keydown.enter</em>
    */
-  createNewActivity(event: KeyboardEvent) {
+  onEnter(event: KeyboardEvent): void {
     event.preventDefault();
-    this.store.dispatch(new CreateActivity(this.index));
+    this.createActivity.emit();
   }
 
   /**
-   * Deletes the activity on a specific index and then set focus to the first available activity
+   * Sends parent component an event to delelte the activity
    * @param event KeyboardEvent <em>keydown.alt.delete</em>
    */
-  async deleteActivity(event: KeyboardEvent) {
+  async onAltDelete(event: KeyboardEvent): Promise<void> {
     event.preventDefault();
-    await animate(this.activityContainer, 'bounceOut', AnimationSpeeds.FASTER);
-    this.store.dispatch(new DeleteActivity(this.index));
-  }
-
-  /**
-   * Updates the store with the changes made to this activity
-   * @param event FocusEvent <em>focusOut</em>
-   */
-  updateActivity(event: FocusEvent): void {
-    event.preventDefault();
-    this.store.dispatch(new UpdateActivity(this.activity, this.index));
+    this.deleteActivity.emit();
   }
 
   // TODO jsDoc
-  openActivityOptions(event: KeyboardEvent) {
+  onShiftEnter(event: KeyboardEvent): void {
     event.preventDefault();
     // TODO open activity options
   }
+
+  animateIn(): Promise<void> {
+    return animate(this.activityContainer, 'bounceIn', AnimationSpeeds.FAST);
+  }
+
+  animateOut(): Promise<void> {
+    return animate(this.activityContainer, 'bounceOut', AnimationSpeeds.FASTER);
+  }
+
 
 }

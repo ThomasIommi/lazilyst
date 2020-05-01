@@ -2,11 +2,19 @@ import { Task } from '../../shared/models/task';
 import { Activity } from '../../shared/models/activity';
 
 
-/** Selects current task action */
+/** Selects task action */
 export class SelectTask {
   static readonly type = '[Tasks] Select task';
 
-  constructor(public selectedTask: Task) {
+  constructor(public index: number) {
+  }
+}
+
+/** Selects task by id action */
+export class SelectTaskById {
+  static readonly type = '[Tasks] Select task by id';
+
+  constructor(public id: string) {
   }
 }
 
@@ -31,11 +39,6 @@ export class DeleteCurrentTask {
   static readonly type = '[Tasks] Delete current task';
 }
 
-/** Synchronizes the complete tasks action */
-export class SyncTasksListWithCurrentTask {
-  static readonly type = '[Tasks] Update task list';
-}
-
 /** Creates an activity action */
 export class CreateActivity {
   static readonly type = '[Activity] Create activity';
@@ -52,10 +55,4 @@ export class DeleteActivity {
   }
 }
 
-/** Updates an activity action */
-export class UpdateActivity {
-  static readonly type = '[Activity] Update activity';
 
-  constructor(public updatedActivity: Activity, public index: number) {
-  }
-}

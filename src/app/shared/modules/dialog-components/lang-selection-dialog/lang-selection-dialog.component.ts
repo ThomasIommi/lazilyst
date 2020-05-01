@@ -23,7 +23,7 @@ export class LangSelectionDialogComponent extends DialogComponent {
    * Language selection, closes the dialog with the selected lang
    * @param selectedLang Selected language
    */
-  selectLang(selectedLang: string) {
+  selectLang(selectedLang: string): void {
     this.close(selectedLang);
   }
 

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
-
 import { CreateActivity } from '../../../state/tasks/tasks.actions';
+
+// import { CreateActivity } from '../../../state/tasks/tasks.actions';
 
 
 @Component({
@@ -22,7 +23,7 @@ export class TaskMenuComponent implements OnInit {
   }
 
   /** Adds an empty activity to the current task */
-  addActivity() {
+  addActivity(): void {
     this.store.dispatch(new CreateActivity());
   }
 }
