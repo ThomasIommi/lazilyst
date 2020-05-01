@@ -9,7 +9,7 @@ import {
   DeleteActivity,
   DeleteCurrentTask,
   SelectTask,
-  SelectTaskById,
+  SelectTaskById, UpdateActivity,
   UpdateTask
 } from './tasks.actions';
 import { Task } from 'src/app/shared/models/task';
@@ -27,7 +27,7 @@ export class TasksStateModel {
 /** Token to identify tasks state */
 export const TASKS_STATE_TOKEN = new StateToken<TasksStateModel>('tasks');
 
-/** NGXS tasks substate */
+/** NGXS tasks state */
 @State<TasksStateModel>({
   name: TASKS_STATE_TOKEN,
   defaults: {
@@ -102,7 +102,6 @@ export class TasksState {
   @Action(UpdateTask)
   updateTask(ctx: StateContext<TasksStateModel>, action: UpdateTask): void {
     ctx.setState(produce((draft: TasksStateModel) => {
-      console.log(action.updatedTask);
       draft.all[draft.currentIndex] = deepmerge(draft.all[draft.currentIndex], action.updatedTask, {arrayMerge: overwriteMerge});
     }));
   }
@@ -137,6 +136,17 @@ export class TasksState {
     ctx.setState(produce((draft: TasksStateModel) => {
       if (action.index != null) {
         draft.all[draft.currentIndex].activities.splice(action.index, 1);
+      }
+    }));
+  }
+
+  /** Updates an activity by its index action */
+  @Action(UpdateActivity)
+  updateActivity(ctx: StateContext<TasksStateModel>, action: UpdateActivity): void {
+    const currentActivity = ctx.getState().all[ctx.getState().currentIndex].activities[action.index];
+    ctx.setState(produce((draft: TasksStateModel) => {
+      if (action.index != null) {
+        draft.all[draft.currentIndex].activities[action.index] = deepmerge(currentActivity, action.updatedActivity);
       }
     }));
   }

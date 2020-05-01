@@ -6,16 +6,18 @@ import { MenuItem } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Select, Store } from '@ngxs/store';
 
+import {
+  ConfirmDialogComponent,
+  ConfirmDialogData,
+  EditTaskDialogComponent,
+  LangSelectionDialogComponent,
+  NewTaskDialogComponent
+} from '../../../shared/modules/dialog-components';
 import { MenuItemLabel } from '../../../shared/models/menu-item-label';
-import { LangSelectionDialogComponent } from '../../../shared/modules/dialog-components/lang-selection-dialog/lang-selection-dialog.component';
 import { SelectLang } from '../../../state/preferences/preferences.actions';
-import { NewTaskDialogComponent } from '../../../shared/modules/dialog-components/new-task-dialog/new-task-dialog.component';
 import { Task } from 'src/app/shared/models/task';
 import { CreateTask, DeleteCurrentTask, UpdateTask } from '../../../state/tasks/tasks.actions';
-import { ConfirmDialogComponent } from '../../../shared/modules/dialog-components/confirm-dialog/confirm-dialog.component';
-import { ConfirmDialogData } from '../../../shared/modules/dialog-components/confirm-dialog/confirm-dialog-data';
 import { TasksState } from '../../../state/tasks/tasks.state';
-import { EditTaskDialogComponent } from '../../../shared/modules/dialog-components/edit-task-dialog/edit-task-dialog.component';
 
 
 @Component({

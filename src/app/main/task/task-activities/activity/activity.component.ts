@@ -1,11 +1,10 @@
-import { Component, ElementRef, EventEmitter, forwardRef, Output, ViewChild } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, ElementRef, EventEmitter, forwardRef, OnInit, Output, ViewChild } from '@angular/core';
+import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Checkbox } from 'primeng/checkbox';
 
 import { animate } from '../../../../shared/functions/animate.functions';
 import { AnimationSpeeds } from '../../../../shared/models/animation-speed';
 import { Activity } from '../../../../shared/models/activity';
-import * as deepmerge from 'deepmerge';
 
 
 @Component({
@@ -20,7 +19,7 @@ import * as deepmerge from 'deepmerge';
     }
   ]
 })
-export class ActivityComponent implements ControlValueAccessor {
+export class ActivityComponent implements OnInit, ControlValueAccessor {
 
   /** Reference to activity main container to handle animations */
   @ViewChild('activityContainer') activityContainer: ElementRef;
@@ -36,6 +35,32 @@ export class ActivityComponent implements ControlValueAccessor {
 
   /** Event emitter to notify the necessity to delete this activity */
   @Output() deleteActivity: EventEmitter<void> = new EventEmitter<void>();
+
+  /** Event emitter to notify the necessity to update this activity */
+  @Output() updateActivity: EventEmitter<Activity> = new EventEmitter<Activity>();
+
+  /** Activity main FormGroup */
+  activityForm: FormGroup;
+
+  /**
+   * Constructor injection
+   * @param formBuilder Angular reactive form builder
+   */
+  constructor(private formBuilder: FormBuilder) {
+  }
+
+  /** Component main initialization */
+  ngOnInit(): void {
+    this.initInnerForm();
+  }
+
+  /** Initializes the activity inner form */
+  private initInnerForm(): void {
+    this.activityForm = this.formBuilder.group({
+      done: false,
+      description: null
+    });
+  }
 
   /** Function to call when the value associated with the widget changes */
   onChange: any = () => {
@@ -65,20 +90,17 @@ export class ActivityComponent implements ControlValueAccessor {
 
   /** Manages the dynamic update of the form value */
   writeValue(activity: Activity): void {
-    if (activity != null) {
-      this.activityCheckbox.writeValue(!!activity.done);
-      this.textAreaElement.nativeElement.value = activity.description != null ? activity.description : '';
-    } else {
-      this.activityCheckbox.writeValue(false);
-      this.textAreaElement.nativeElement.value = '';
-    }
+    this.activityForm.patchValue(activity != null ? activity : new Activity());
   }
 
-  /** Activity onChange handling */
-  handleChange(): void {
-    const description = this.textAreaElement.nativeElement.value;
-    const done = this.activityCheckbox.isChecked();
-    this.onChange({description, done} as Activity);
+  /**
+   * Activity onChange handling
+   * @param event KeyboardEvent <em>keydown.alt.delete</em>
+   */
+  handleChange(event?: any): void {
+    const newValue = this.activityForm.value;
+    this.updateActivity.emit(newValue);
+    this.onChange(newValue);
   }
 
   /**

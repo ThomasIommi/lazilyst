@@ -1,21 +1,26 @@
 <div #activityContainer class="activity-container">
-  <div class="p-col-12 ui-inputgroup">
-    <span class="ui-inputgroup-addon">
-      <p-checkbox #activityCheckbox
-                  (onChange)="handleChange()">
-      </p-checkbox>
-    </span>
-    <textarea #textAreaElement
-              pInputTextarea
-              appNoBlank
-              [rows]="1"
-              [autoResize]="true"
-              (keydown.enter)="onEnter($event)"
-              (keydown.shift.enter)="onShiftEnter($event)"
-              (keydown.alt.delete)="onAltDelete($event)"
-              (keyup)="handleChange()"
-              [ngClass]="{taskDone: activityCheckbox.checked}"
-              [maxLength]="1023">
-    </textarea>
-  </div>
+  <form [formGroup]="activityForm">
+    <div class="p-col-12 ui-inputgroup">
+      <span class="ui-inputgroup-addon">
+        <p-checkbox #activityCheckbox
+                    formControlName="done"
+                    [binary]="true"
+                    (onChange)="handleChange()">
+        </p-checkbox>
+      </span>
+        <textarea #textAreaElement
+                  pInputTextarea
+                  appNoBlank
+                  formControlName="description"
+                  [rows]="1"
+                  [autoResize]="true"
+                  (keydown.enter)="onEnter($event)"
+                  (keydown.shift.enter)="onShiftEnter($event)"
+                  (keydown.alt.delete)="onAltDelete($event)"
+                  (ngModelChange)="handleChange($event)"
+                  [ngClass]="{taskDone: activityCheckbox.checked}"
+                  [maxLength]="280">
+      </textarea>
+    </div>
+  </form>
 </div>

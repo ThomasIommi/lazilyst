@@ -55,4 +55,12 @@ export class DeleteActivity {
   }
 }
 
+/** Updates an activity action */
+export class UpdateActivity {
+  static readonly type = '[Activity] Update activity';
+
+  constructor(public updatedActivity: Activity, public index: number) {
+  }
+}
+
 

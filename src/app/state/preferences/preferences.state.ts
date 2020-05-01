@@ -14,7 +14,7 @@ export class PreferencesStateModel {
 /** Token to identify preferences state */
 export const PREFERENCES_STATE_TOKEN = new StateToken<TasksStateModel>('preferences');
 
-/** NGXS app preferences substate */
+/** NGXS app preferences state */
 @State<PreferencesStateModel>({
   name: PREFERENCES_STATE_TOKEN,
   defaults: {

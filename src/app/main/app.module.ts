@@ -22,7 +22,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TaskSelectorComponent } from './header/task-selector/task-selector.component';
 import { GlobalMenuComponent } from './header/global-menu/global-menu.component';
-import { DialogComponentsModule } from '../shared/modules/dialog-components/dialog-components.module';
+import { DialogComponentsModule } from '../shared/modules/dialog-components';
 import { TaskInfosComponent } from './task/task-infos/task-infos.component';
 import { environment } from '../../environments/environment';
 import { applicationStates, applicationStateTokens } from '../state/store-index';

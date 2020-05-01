@@ -9,7 +9,8 @@
         <div *ngFor="let control of activitiesFormArray.controls; let i = index">
           <app-activity [formControlName]="i"
                         (createActivity)="addActivity(i)"
-                        (deleteActivity)="deleteActivity(i)">
+                        (deleteActivity)="deleteActivity(i)"
+                        (updateActivity)="updateActivity($event, i)">
           </app-activity>
         </div>
       </ng-container>

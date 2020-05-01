@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { CreateActivity } from '../../../state/tasks/tasks.actions';
 
-// import { CreateActivity } from '../../../state/tasks/tasks.actions';
+import { CreateActivity } from '../../../state/tasks/tasks.actions';
 
 
 @Component({

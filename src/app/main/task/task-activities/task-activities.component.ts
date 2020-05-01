@@ -1,13 +1,14 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { Actions, ofActionSuccessful, Store } from '@ngxs/store';
+import { Actions, ofActionDispatched, ofActionSuccessful, Store } from '@ngxs/store';
 import { Subject } from 'rxjs';
-import { debounceTime, take, takeUntil } from 'rxjs/operators';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 
 import { TasksState } from '../../../state/tasks/tasks.state';
 import { ActivityComponent } from './activity/activity.component';
-import { CreateActivity, DeleteActivity, SelectTask, SelectTaskById, UpdateTask } from '../../../state/tasks/tasks.actions';
+import { CreateActivity, DeleteActivity, SelectTask, SelectTaskById, UpdateActivity } from '../../../state/tasks/tasks.actions';
 import { Task } from '../../../shared/models/task';
+import { Activity } from '../../../shared/models/activity';
 
 
 @Component({
@@ -45,8 +46,8 @@ export class TaskActivitiesComponent implements OnInit, OnDestroy {
   /** Constructor main initialization */
   ngOnInit(): void {
     this.initForm();
-    this.stateToFormBinding();
-    this.formToStateBinding();
+    this.initStateToFormBinding();
+    this.initUpdateActivityDebouncer();
   }
 
   /** Cleanup before component destruction */
@@ -68,20 +69,18 @@ export class TaskActivitiesComponent implements OnInit, OnDestroy {
     this.taskForm.patchValue(currentTask);
   }
 
-  /**
-   * Executes a subscription to the CreateActivity and SelectTask successful actions
-   */
-  private stateToFormBinding(): void {
+  /** Executes a subscription to the CreateActivity and SelectTask successful actions */
+  private initStateToFormBinding(): void {
     this.actions$.pipe(
       takeUntil(this.onDestroySubject),
       ofActionSuccessful(SelectTask, SelectTaskById, CreateActivity, DeleteActivity)
-    ).subscribe(activity => {
-      switch (activity.constructor) {
+    ).subscribe(action => {
+      switch (action.constructor) {
         case CreateActivity:
-          this.addFormControl(activity.index);
+          this.addFormControl(action.index);
           break;
         case DeleteActivity:
-          this.deleteFormControl(activity.index);
+          this.deleteFormControl(action.index);
           break;
         case SelectTask:
         case SelectTaskById:
@@ -89,6 +88,15 @@ export class TaskActivitiesComponent implements OnInit, OnDestroy {
           break;
       }
     });
+  }
+
+  /** Executes a subscription to the UpdateActivity dispatched actions to apply a debouncer */
+  private initUpdateActivityDebouncer(): void {
+    this.actions$.pipe(
+      takeUntil(this.onDestroySubject),
+      ofActionDispatched(UpdateActivity),
+      debounceTime(1000)
+    ).subscribe();
   }
 
   /**
@@ -105,6 +113,15 @@ export class TaskActivitiesComponent implements OnInit, OnDestroy {
    */
   deleteActivity(index: number): void {
     this.store.dispatch(new DeleteActivity(index));
+  }
+
+  /**
+   * Requests the store to update the activity on a specific index
+   * @param value Activity new value
+   * @param index Index identifying the activity to update
+   */
+  updateActivity(value: Activity, index: number): void {
+    this.store.dispatch(new UpdateActivity(value, index));
   }
 
   /**
@@ -135,7 +152,6 @@ export class TaskActivitiesComponent implements OnInit, OnDestroy {
       await this.activityComponents.toArray()[index].animateOut();
       this.activitiesFormArray.removeAt(index);
       this.changeDetectorRef.detectChanges();
-      console.log('removed', this.taskForm.value);
       index = this.activityComponents.length > index ? index : (this.activityComponents.length - 1);
       if (index >= 0) {
         this.activityComponents.toArray()[index].focus();
@@ -143,13 +159,4 @@ export class TaskActivitiesComponent implements OnInit, OnDestroy {
     }
   }
 
-  /** Binds the form updates (debounced) to the state, persisisting them */
-  private formToStateBinding(): void {
-    this.taskForm.valueChanges.pipe(
-      takeUntil(this.onDestroySubject),
-      debounceTime(500)
-    ).subscribe(changes => {
-      this.store.dispatch(new UpdateTask(changes));
-    });
-  }
 }
