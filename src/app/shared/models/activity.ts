@@ -2,9 +2,9 @@ import { BaseEntity } from './base-entity';
 
 
 export class Activity extends BaseEntity {
-  /** Main description */
+  /** Activity main description */
   description: string;
 
-  /** Done activity flag */
+  /** Activity completed flag */
   done: boolean;
 }

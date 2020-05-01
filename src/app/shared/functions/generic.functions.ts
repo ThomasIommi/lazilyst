@@ -9,6 +9,7 @@ export async function sleep(ms: number): Promise<void> {
 }
 
 /** Deep merges two arrays of activities overriding the target one */
+// FIXME is this really necessary?
 export function overwriteMerge(target: Activity[], source: Activity[], options: Options): Activity[] {
   const result = target.slice();
   source.forEach((item, index) => {

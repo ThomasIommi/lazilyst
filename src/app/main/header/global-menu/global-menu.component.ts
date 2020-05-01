@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { take, takeUntil } from 'rxjs/operators';
 import { combineLatest, Observable, Subject } from 'rxjs';
+import { take, takeUntil } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
+import { Select, Store } from '@ngxs/store';
 import { MenuItem } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
-import { Select, Store } from '@ngxs/store';
 
 import {
   ConfirmDialogComponent,

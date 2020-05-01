@@ -7,9 +7,7 @@ export class AnimationSpeeds {
   static FASTER: AnimationSpeed = {name: 'faster', duration: 500};
 }
 
-/**
- * Interface for animation speeds
- */
+/** Interface for animation speeds */
 export interface AnimationSpeed {
   /** Name */
   name: string;

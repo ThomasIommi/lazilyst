@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Message, MessageService } from 'primeng/api';
 import { TranslateService } from '@ngx-translate/core';
+import { Message, MessageService } from 'primeng/api';
 
 import { FormService } from '../../services/form.service';
 import { Task } from '../../models/task';

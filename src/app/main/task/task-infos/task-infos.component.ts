@@ -11,20 +11,10 @@ import { TasksState } from '../../../state/tasks/tasks.state';
   templateUrl: './task-infos.component.html',
   styleUrls: ['./task-infos.component.scss']
 })
-export class TaskInfosComponent implements OnInit {
+export class TaskInfosComponent {
 
   /** Current task observable from NGXS app state */
   @Select(TasksState.currentTask) currentTask$: Observable<Task>;
-
-  /**
-   * Constructor injection
-   */
-  constructor() {
-  }
-
-  /** Component main initialization */
-  ngOnInit(): void {
-  }
 
   /** Check if there is at least some info to display */
   thereIsInfo(task: Task): boolean {

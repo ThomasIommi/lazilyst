@@ -8,18 +8,18 @@
                     (onChange)="handleChange()">
         </p-checkbox>
       </span>
-        <textarea #textAreaElement
-                  pInputTextarea
-                  appNoBlank
-                  formControlName="description"
-                  [rows]="1"
-                  [autoResize]="true"
-                  (keydown.enter)="onEnter($event)"
-                  (keydown.shift.enter)="onShiftEnter($event)"
-                  (keydown.alt.delete)="onAltDelete($event)"
-                  (ngModelChange)="handleChange($event)"
-                  [ngClass]="{taskDone: activityCheckbox.checked}"
-                  [maxLength]="280">
+      <textarea #textAreaElement
+                pInputTextarea
+                appNoBlank
+                formControlName="description"
+                [rows]="1"
+                [autoResize]="true"
+                (keydown.enter)="onEnter($event)"
+                (keydown.shift.enter)="onShiftEnter($event)"
+                (keydown.alt.delete)="onAltDelete($event)"
+                (ngModelChange)="handleChange($event)"
+                [ngClass]="{taskDone: activityCheckbox.checked}"
+                [maxLength]="280">
       </textarea>
     </div>
   </form>

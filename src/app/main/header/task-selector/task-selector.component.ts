@@ -1,8 +1,8 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Dropdown } from 'primeng/dropdown';
 import { Select, Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { Dropdown } from 'primeng/dropdown';
 
 import { Task } from '../../../shared/models/task';
 import { SelectTaskById } from '../../../state/tasks/tasks.actions';

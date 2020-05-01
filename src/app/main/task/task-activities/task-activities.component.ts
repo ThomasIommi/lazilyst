@@ -69,7 +69,7 @@ export class TaskActivitiesComponent implements OnInit, OnDestroy {
     this.taskForm.patchValue(currentTask);
   }
 
-  /** Executes a subscription to the CreateActivity and SelectTask successful actions */
+  /** Executes a subscription to the CreateActivity and SelectTask successful actions to update the form when needed */
   private initStateToFormBinding(): void {
     this.actions$.pipe(
       takeUntil(this.onDestroySubject),
