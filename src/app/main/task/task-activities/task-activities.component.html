@@ -1,20 +1,25 @@
-<div *ngIf="activitiesFormArray.controls != null && activitiesFormArray.controls.length > 0; else noActivities"
-     class="activities-container">
+<div *ngIf="(activities$ | async) != null && (activities$ | async).length > 0; else noActivities"
+     class="activities-fieldset-container">
   <p-fieldset [toggleable]="true">
     <p-header>
       {{ 'i18n.term.activities' | translate }}
     </p-header>
-    <form [formGroup]="taskForm">
-      <ng-container formArrayName="activities">
-        <div *ngFor="let control of activitiesFormArray.controls; let i = index">
-          <app-activity [formControlName]="i"
-                        (createActivity)="addActivity(i)"
-                        (deleteActivity)="deleteActivity(i)"
-                        (updateActivity)="updateActivity($event, i)">
-          </app-activity>
-        </div>
-      </ng-container>
-    </form>
+    <div #dropZone
+         pDroppable="activity"
+         (onDrop)="drop(dropZone)">
+      <div *ngFor="let activity of (activities$ | async); let i = index; trackBy: trackActivities"
+           #dragElement
+           class="activity"
+           pDraggable="activity"
+           (onDragStart)="dragStart(dragElement, i)"
+           (onDrag)="drag($event)"
+           (onDragEnd)="dragEnd(dropZone)">
+        <app-activity [activity]="activity"
+                      [index]="i"
+                      [autoresize]="!isDragging()">
+        </app-activity>
+      </div>
+    </div>
   </p-fieldset>
 </div>
 

@@ -29,7 +29,6 @@
     "@ngxs/store": "^3.6.2",
     "@types/uuid": "^7.0.3",
     "animate.css": "^3.7.2",
-    "deepmerge": "^4.2.2",
     "flag-icon-css": "^3.4.6",
     "immer": "^6.0.3",
     "primeflex": "^1.0.0",

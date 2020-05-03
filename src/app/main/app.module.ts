@@ -17,6 +17,7 @@ import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { DragDropModule } from 'primeng/dragdrop';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -58,6 +59,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateLoader {
     CardModule,
     CheckboxModule,
     DialogComponentsModule,
+    DragDropModule,
     DynamicDialogModule,
     DropdownModule,
     FieldsetModule,

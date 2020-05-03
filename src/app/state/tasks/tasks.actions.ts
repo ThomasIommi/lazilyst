@@ -63,4 +63,12 @@ export class UpdateActivity {
   }
 }
 
+/** Move an activity in the current task array action */
+export class MoveActivity {
+  static readonly type = '[Activity] Move activity';
+
+  constructor(public prevIndex: number, public nextIndex: number) {
+  }
+}
+
 

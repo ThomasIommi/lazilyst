@@ -14,3 +14,9 @@ export interface AnimationSpeed {
   /** Duration in milliseconds */
   duration: number;
 }
+
+/** Animation direction for drag&drop animations */
+export enum AnimationDirection {
+  UP = 'UP',
+  DOWN = 'DOWN'
+}

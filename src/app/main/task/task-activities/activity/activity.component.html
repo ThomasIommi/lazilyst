@@ -13,10 +13,10 @@
                 appNoBlank
                 formControlName="description"
                 [rows]="1"
-                [autoResize]="true"
-                (keydown.enter)="onEnter($event)"
+                [autoResize]="autoresize"
+                (keydown.enter)="createNextActivity($event)"
                 (keydown.shift.enter)="onShiftEnter($event)"
-                (keydown.alt.delete)="onAltDelete($event)"
+                (keydown.alt.delete)="deleteActivity($event)"
                 (ngModelChange)="handleChange($event)"
                 [ngClass]="{taskDone: activityCheckbox.checked}"
                 [maxLength]="280">

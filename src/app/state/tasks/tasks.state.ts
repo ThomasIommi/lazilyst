@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, StateToken } from '@ngxs/store';
 import produce from 'immer';
-import * as deepmerge from 'deepmerge';
 
 import {
   CreateActivity,
   CreateTask,
   DeleteActivity,
   DeleteCurrentTask,
+  MoveActivity,
   SelectTask,
-  SelectTaskById, UpdateActivity,
+  SelectTaskById,
+  UpdateActivity,
   UpdateTask
 } from './tasks.actions';
 import { Task } from 'src/app/shared/models/task';
 import { DatabaseService } from '../../shared/services/database.service';
 import { Activity } from '../../shared/models/activity';
-import { overwriteMerge } from '../../shared/functions/generic.functions';
 
 
 /** Tasks state model */
@@ -90,7 +90,7 @@ export class TasksState {
   /** Creates a new task action, then select it as a current task */
   @Action(CreateTask)
   createTask(ctx: StateContext<TasksStateModel>, action: CreateTask): void {
-    const newTask = deepmerge(new Task(), action.newTask);
+    const newTask = {...new Task(), ...action.newTask};
     newTask._id = this.databaseService.getUniqueId(ctx.getState().all);
     ctx.setState(produce((draft: TasksStateModel) => {
       draft.all.push(newTask);
@@ -102,7 +102,7 @@ export class TasksState {
   @Action(UpdateTask)
   updateTask(ctx: StateContext<TasksStateModel>, action: UpdateTask): void {
     ctx.setState(produce((draft: TasksStateModel) => {
-      draft.all[draft.currentIndex] = deepmerge(draft.all[draft.currentIndex], action.updatedTask, {arrayMerge: overwriteMerge});
+      draft.all[draft.currentIndex] = {...draft.all[draft.currentIndex], ...action.updatedTask};
     }));
   }
 
@@ -125,7 +125,7 @@ export class TasksState {
       if (action.index == null) {
         draft.all[draft.currentIndex].activities.push(activity);
       } else {
-        draft.all[draft.currentIndex].activities.splice(action.index + 1, 0, activity);
+        draft.all[draft.currentIndex].activities.splice(action.index, 0, activity);
       }
     }));
   }
@@ -146,8 +146,19 @@ export class TasksState {
     const currentActivity = ctx.getState().all[ctx.getState().currentIndex].activities[action.index];
     ctx.setState(produce((draft: TasksStateModel) => {
       if (action.index != null) {
-        draft.all[draft.currentIndex].activities[action.index] = deepmerge(currentActivity, action.updatedActivity);
+        draft.all[draft.currentIndex].activities[action.index] = {...currentActivity, ...action.updatedActivity};
       }
+    }));
+  }
+
+  /** Move an activity from prevIndex to nextIndex in the current task activities array action */
+  @Action(MoveActivity)
+  moveActivity(ctx: StateContext<TasksStateModel>, action: MoveActivity): void {
+    ctx.setState(produce((draft: TasksStateModel) => {
+      const activities = draft.all[draft.currentIndex].activities;
+      const activityToMove = activities[action.prevIndex];
+      activities.splice(action.prevIndex, 1);
+      activities.splice(action.nextIndex, 0, activityToMove);
     }));
   }
 

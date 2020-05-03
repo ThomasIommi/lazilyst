@@ -1,6 +1,7 @@
 textarea {
   width: 100%;
   line-height: 1.5rem;
+  resize: none;
   &.taskDone {
     text-decoration: line-through;
   }
@@ -10,5 +11,3 @@ p-checkbox {
   height: 100%;
   align-items: center;
 }
-
-

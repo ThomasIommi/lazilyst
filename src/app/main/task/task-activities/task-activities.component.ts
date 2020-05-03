@@ -1,13 +1,14 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { Actions, ofActionDispatched, ofActionSuccessful, Store } from '@ngxs/store';
-import { Subject } from 'rxjs';
-import { debounceTime, takeUntil } from 'rxjs/operators';
+import { FormBuilder } from '@angular/forms';
+import { Actions, ofActionSuccessful, Select, Store } from '@ngxs/store';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { TasksState } from '../../../state/tasks/tasks.state';
 import { ActivityComponent } from './activity/activity.component';
-import { CreateActivity, DeleteActivity, SelectTask, SelectTaskById, UpdateActivity } from '../../../state/tasks/tasks.actions';
-import { Task } from '../../../shared/models/task';
+import { CreateActivity, DeleteActivity, MoveActivity } from '../../../state/tasks/tasks.actions';
+import { dndClean, dndFindDropIndex, dndHide, dndMakeSpace } from '../../../shared/functions/animate.functions';
+import { AnimationDirection } from '../../../shared/models/animation-models';
 import { Activity } from '../../../shared/models/activity';
 
 
@@ -18,17 +19,23 @@ import { Activity } from '../../../shared/models/activity';
 })
 export class TaskActivitiesComponent implements OnInit, OnDestroy {
 
-  /** Angular QueryList of ActivityComponent, to set the focus state on activity creation/deletetion */
+  /** Current task activities observable from NGXS app state */
+  @Select(TasksState.currentTaskActivities) activities$: Observable<Activity[]>;
+
+  /** Angular QueryList of ActivityComponent, to handle the focus of activities */
   @ViewChildren(ActivityComponent) activityComponents: QueryList<ActivityComponent>;
 
   /** Destroy subscription signal */
   private onDestroySubject: Subject<boolean> = new Subject<boolean>();
 
-  /** Task main FormGroup */
-  taskForm: FormGroup;
+  /** Reference to the element dragged during drag&drop */
+  private dragged: HTMLDivElement;
 
-  /** Activities form array */
-  activitiesFormArray: FormArray;
+  /** Index of the element being dragged */
+  private draggedIndex: number;
+
+  /** Array of function to handle drag&drop animations */
+  private moveFunctions: ((x: number) => void)[] = [];
 
   /**
    * Constructor injection
@@ -45,9 +52,7 @@ export class TaskActivitiesComponent implements OnInit, OnDestroy {
 
   /** Constructor main initialization */
   ngOnInit(): void {
-    this.initForm();
-    this.initStateToFormBinding();
-    this.initUpdateActivityDebouncer();
+    this.initFocusHandler();
   }
 
   /** Cleanup before component destruction */
@@ -56,107 +61,121 @@ export class TaskActivitiesComponent implements OnInit, OnDestroy {
     this.onDestroySubject.unsubscribe();
   }
 
-  /** Form initialization */
-  private initForm(): void {
-    this.activitiesFormArray = this.formBuilder.array([]);
-    this.taskForm = this.formBuilder.group({
-      activities: this.activitiesFormArray
-    });
-    const currentTask = this.store.selectSnapshot<Task>(TasksState.currentTask);
-    currentTask.activities.forEach(() => {
-      this.activitiesFormArray.push(this.formBuilder.control(null));
-    });
-    this.taskForm.patchValue(currentTask);
-  }
-
-  /** Executes a subscription to the CreateActivity and SelectTask successful actions to update the form when needed */
-  private initStateToFormBinding(): void {
+  /**
+   * Executes a subscription to activity creation and deletion successful actions to set the focus to a specific activity
+   */
+  private initFocusHandler(): void {
     this.actions$.pipe(
       takeUntil(this.onDestroySubject),
-      ofActionSuccessful(SelectTask, SelectTaskById, CreateActivity, DeleteActivity)
+      ofActionSuccessful(CreateActivity, DeleteActivity)
     ).subscribe(action => {
       switch (action.constructor) {
         case CreateActivity:
-          this.addFormControl(action.index);
-          break;
         case DeleteActivity:
-          this.deleteFormControl(action.index);
-          break;
-        case SelectTask:
-        case SelectTaskById:
-          this.initForm();
+          this.focusNextElement(action.index);
           break;
       }
     });
   }
 
-  /** Executes a subscription to the UpdateActivity dispatched actions to apply a debouncer */
-  private initUpdateActivityDebouncer(): void {
-    this.actions$.pipe(
-      takeUntil(this.onDestroySubject),
-      ofActionDispatched(UpdateActivity),
-      debounceTime(1000)
-    ).subscribe();
-  }
-
   /**
-   * Requests the store to add a new activity on a specific index
-   * @param index Index where to add a new activity
+   * Focuses the proper activity after the creation of a new activity or a deletion
+   * @param index Index of the activity to focus
    */
-  addActivity(index: number): void {
-    this.store.dispatch(new CreateActivity(index));
-  }
-
-  /**
-   * Requests the store to delete the activity on a specific index
-   * @param index Index identifying the activity to delete
-   */
-  deleteActivity(index: number): void {
-    this.store.dispatch(new DeleteActivity(index));
-  }
-
-  /**
-   * Requests the store to update the activity on a specific index
-   * @param value Activity new value
-   * @param index Index identifying the activity to update
-   */
-  updateActivity(value: Activity, index: number): void {
-    this.store.dispatch(new UpdateActivity(value, index));
-  }
-
-  /**
-   * Adds a new form control to the activities form handling animations
-   * @param index Index where to add new form control
-   */
-  private addFormControl(index: number): void {
-    const fromNewButton: boolean = index == null;
-    if (fromNewButton) {
-      index = this.activitiesFormArray.length;
-    } else {
-      index = index + 1;
-    }
-    this.activitiesFormArray.insert(index, this.formBuilder.control(null));
+  private focusNextElement(index: number): void {
     this.changeDetectorRef.detectChanges();
-    this.activityComponents.toArray()[index].animateIn();
-    if (!fromNewButton) {
+    if (this.activityComponents.length > 0) {
+      index = index == null || index >= this.activityComponents.length ? this.activityComponents.length - 1 : index;
       this.activityComponents.toArray()[index].focus();
     }
   }
 
   /**
-   * Deletes the form control from the activities form handling animations
-   * @param index Index identifying the activity to delete
+   * Track function to avoid the DOM manipulation of unchanged activities every state change
+   * it compares the activity id
+   * @param index Index of the activity
+   * @param activity Activity tracked
    */
-  private async deleteFormControl(index: number): Promise<void> {
-    if (this.activityComponents.length > 0) {
-      await this.activityComponents.toArray()[index].animateOut();
-      this.activitiesFormArray.removeAt(index);
-      this.changeDetectorRef.detectChanges();
-      index = this.activityComponents.length > index ? index : (this.activityComponents.length - 1);
-      if (index >= 0) {
-        this.activityComponents.toArray()[index].focus();
-      }
+  trackActivities(index: number, activity: Activity): string {
+    return activity._id;
+  }
+
+  /**
+   * Handler for drag&grop event on drag start
+   * @param dragElement Dragged activity div container
+   * @param index Index of the element being dragged
+   */
+  async dragStart(dragElement: HTMLDivElement, index: number): Promise<void> {
+    this.dragged = dragElement;
+    this.draggedIndex = index;
+
+    const height = dragElement.getBoundingClientRect().height;
+    await dndHide(dragElement);
+
+    let next: HTMLElement = dragElement.nextElementSibling as HTMLElement;
+    while (next) {
+      const nextCopy = next;
+      const threshold = next.getBoundingClientRect().top;
+      this.moveFunctions.push((x: number) => {
+        dndMakeSpace.bind(undefined, nextCopy, AnimationDirection.UP, height, threshold, x)();
+      });
+      next = next.nextElementSibling as HTMLElement;
     }
+    let prev: HTMLElement = dragElement.previousElementSibling as HTMLElement;
+    while (prev) {
+      const prevCopy = prev;
+      const threshold = prev.getBoundingClientRect().bottom;
+      this.moveFunctions.push((x: number) => {
+        dndMakeSpace.bind(undefined, prevCopy, AnimationDirection.DOWN, height, threshold, x)();
+      });
+      prev = prev.previousElementSibling as HTMLElement;
+    }
+  }
+
+  /**
+   * Handler for drag&drop event on drag
+   * @param event drag DragEvent
+   */
+  drag(event: DragEvent): void {
+    this.moveFunctions.forEach(f => f(event.clientY));
+  }
+
+  /**
+   * Handler for drag&drop event on drag end
+   * @param dropZone List of activities container drop zone
+   */
+  dragEnd(dropZone: HTMLDivElement): void {
+    this.resetDndAttributes(dropZone);
+  }
+
+  /**
+   * Handler for drag&drop event on drop
+   * @param dropZone List of activities container drop zone
+   */
+  drop(dropZone: HTMLDivElement): void {
+    const dropIndex = dndFindDropIndex(dropZone, this.draggedIndex);
+    if (dropIndex !== -1) {
+      this.store.dispatch(new MoveActivity(this.draggedIndex, dropIndex));
+    }
+    this.resetDndAttributes(dropZone);
+  }
+
+  /** Checks if there is an ongoing operation of drag&drop */
+  isDragging(): boolean {
+    return this.dragged != null;
+  }
+
+  /**
+   * Resets all drag&drop attributes and used inline styles
+   * @param dropZone List of activities container drop zone
+   */
+  private resetDndAttributes(dropZone: HTMLDivElement): void {
+    if (this.isDragging()) {
+      dndClean(Array.from(dropZone.children) as HTMLElement[]);
+    }
+    this.dragged = null;
+    this.draggedIndex = null;
+    this.moveFunctions.length = 0;
   }
 
 }
